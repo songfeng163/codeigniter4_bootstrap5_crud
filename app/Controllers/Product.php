@@ -28,7 +28,7 @@ class Product extends Controller {
 		// $data['product'] = $model->getProduct->getResult();
 		// $data['category'] = $model->getCategory->getResult();
 		// echo view('main_side_bar');
-		echo view('test_view', $data);
+		echo view('test_view_1', $data);
 	}
 
 	public function save() {
