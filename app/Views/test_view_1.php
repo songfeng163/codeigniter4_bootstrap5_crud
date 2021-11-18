@@ -8,23 +8,20 @@
 		<link rel="stylesheet" href="css/dataTables.bootstrap5.min.css">
 		<link rel="stylesheet" href="css/jquery.dataTables.min.css">
 		<style>
-			.mt-2{
-				margin: 20px;
+			.mt{
+				margin-top:5em;
 			}
 		</style>
 	</head>
 	<body>
-		<br/>
-		<br/>
-		<br/>
-		<br/>
-		<div id="layoutSidenav_content" class="">
-			<div class="container mt-9 col-md-7 col-sm-7 col-lg-7">
+		<div id="layoutSidenav_content" class="mt">
+			<div class="container col-md-7 col-sm-7 col-lg-7">
 			<h3>Product Lists</h3>
 			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal"> Add New </button>
-			<table id="tblproduct" class="table table-striped table-bordered">
+			<table id="tblproduct" class="mt table table-striped table-bordered">
 				<thead>
 					<tr>
+						<th>ID</th>
 						<th>Product Name</th>
 						<th>Price</th>
 						<th>Category</th>
@@ -32,79 +29,25 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-					</tr>
-					<tr>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-					</tr>
-					<tr>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-					</tr>
-					<tr>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-					</tr>
-					<tr>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-					</tr>
-					<tr>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-					</tr>
-					<tr>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-					</tr>
-					<tr>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-					</tr>
-					<tr>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-					</tr>
-					<tr>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-					</tr>
-					<tr>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-						<td>test</td>
-					</tr>
-
+						<?php foreach($product as $row): ?>
+							<tr>
+								<td> <?= $row->product_id; ?></td>
+								<td> <?= $row->product_name; ?></td>
+								<td> <?= $row->product_price; ?></td>
+								<td> <?= $row->category_name; ?></td>
+								<td>
+									<a href="#" class="btn btn-info btn-sm btn-edit" data-id="<?= $row->product_id;?>" data-name="<?= $row->product_name;?>"  data-price="<?= $row->product_price;?>" data-category_id="<?= $row->product_category_id;?>">Edit</a>
+									<a href="#" class="btn btn-danger btn-sm btn-delete" data-id="<?= $row->product_id;?>">Delete</a>
+								</td>
+							</tr>
+						<?php endforeach; ?>
 				</tbody>
 			</table>
 			</div> <!-- end container -->
 		</div> <!-- Layout Side nav Content -->
+
 		<!-- Modal Add Product -->
-		<form action="<?php echo site_url() . '/product/save' ?>" method="post">
+		<form action="" method="post">
 			<div class="modal fade" id="addModal" tabindex="1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">

@@ -14,18 +14,17 @@ class Product_model extends Model {
     // ];
 
 	public function getCategory() {
-		$builder = $this->db->table('category');
+		$db      = \Config\Database::connect();
+		$builder = $db->table('category');
 		return $builder->get();
-
 	}
 
 	public function getProduct() {
-		$db = db_connect();
+		$db      = \Config\Database::connect();
 		$builder = $db->table('product');
 		$builder->select('*');
 		$builder->join('category', 'category_id = product_category_id', 'left');
 		return $builder->get();
-
 	}
 
 	public function saveProduct($data) {
