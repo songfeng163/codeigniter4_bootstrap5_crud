@@ -95,18 +95,18 @@ class Product extends Controller {
 
 	//--------------------------------------------------------------------------
     function get_category() {
-        if (isset($_REQUEST['q'])) {
-            $sql = "SELECT category_id as id, concat(category_id, '-', category_name) as name FROM category WHERE category_id LIKE '%" . $_REQUEST['q'] . "%' OR category_name LIKE '%" . $_REQUEST['q'] . "%'";
-		    $db = db_connect();
+		$db = db_connect();
+        if (isset($_REQUEST['query'])) {
+            $sql = "SELECT category_id as data, concat(category_id, '-', category_name) as value FROM category WHERE category_id LIKE '%" . $_REQUEST['query'] . "%' OR category_name LIKE '%" . $_REQUEST['query'] . "%'";
             $query = $db->query($sql);
         } else {
-            $sql = "";
-            $query = $this->db->query($sql);
+            $sql = "SELECT category_id as id, concat(category_id, '-', category_name) as name FROM category";
+            $query = $db->query($sql);
         }
 
         if ($query->getNumRows() > 0) {
             $result = json_encode($query->getResult('array'));
-            $result = '{"results":' . $result . '}';
+            $result = '{"query": "'. $_REQUEST['query'] . '", "suggestions":' . $result . '}';
             echo $result;
         } else {
             echo json_encode(array());

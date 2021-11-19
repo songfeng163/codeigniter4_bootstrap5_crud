@@ -7,7 +7,8 @@
 		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/dataTables.bootstrap5.min.css">
 		<link rel="stylesheet" href="css/jquery.dataTables.min.css">
-		<link href="css/jquery.flexbox.css" rel="stylesheet">
+		<link rel="stylesheet" href="css/auto_complete_styles.css">
+		<link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 		<style>
 			.mt{
 				margin-top:5em;
@@ -61,7 +62,8 @@
 							</div>
 							<div class="form-group">
 								<label>Category</label>
-								<div id="category">
+								<input type="text" id="category_input">
+								<div id="selction-ajax"></div>
 							</div>
 						</div>
 						<div class="modal-footer">
@@ -78,7 +80,8 @@
 	<script type="text/javascript" src="js/jquery-3.5.1.js"></script>
 	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 	<script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-	<script type="text/JavaScript" src="js/jquery.flexbox.min.js"> </script>
+	<script type="text/JavaScript" src="js/jquery.autocomplete.js"> </script>
+	<script type="text/JavaScript" src="js/jquery.mockjax.js"> </script>
 <script>
 $(document).ready( function () {
 	var dataTable;
@@ -117,11 +120,16 @@ $(document).ready( function () {
 				}
 			});
 
-		//to show list for auto complete customer Name Text Box
-		$('#category').flexbox('index.php/product/get_category', {selectBehavior: false, watermark: '', paging: true, allowInput: true, autoCompleteFirstMatch: false});
-		$('#category_ctr').css('width', '200px');
-		$('#category_input').css('width', '200px');
+
 	}
+	//----------------------------------------------------------------------
+	$('#category_input').autocomplete({
+			serviceUrl: 'index.php/product/get_category',
+			onSelect:function (suggestion) {
+				// alert('You selected: ' + suggestion.value +', ' + suggestion.data);
+				$('#selction-ajax').html('You selected: ' + suggestion.value + ', ' + suggestion.data);
+			}
+	});
 	//----------------------------------------------------------------------
 	});
 </script>
