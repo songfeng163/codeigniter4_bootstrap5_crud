@@ -7,6 +7,7 @@
 		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/dataTables.bootstrap5.min.css">
 		<link rel="stylesheet" href="css/jquery.dataTables.min.css">
+		<link href="css/jquery.flexbox.css" rel="stylesheet">
 		<style>
 			.mt{
 				margin-top:5em;
@@ -16,36 +17,28 @@
 	<body>
 		<div id="layoutSidenav_content" class="mt">
 			<div class="container col-md-7 col-sm-7 col-lg-7">
-			<h3>Product Lists</h3>
-			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal"> Add New </button>
-			<table id="tblproduct" class="mt table table-striped table-bordered">
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Product Name</th>
-						<th>Price</th>
-						<th>Category</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-				<tbody>
-						<?php foreach($product as $row): ?>
-							<tr>
-								<td> <?= $row->product_id; ?></td>
-								<td> <?= $row->product_name; ?></td>
-								<td> <?= $row->product_price; ?></td>
-								<td> <?= $row->category_name; ?></td>
-								<td>
-									<a href="#" class="btn btn-info btn-sm btn-edit" data-id="<?= $row->product_id;?>" data-name="<?= $row->product_name;?>"  data-price="<?= $row->product_price;?>" data-category_id="<?= $row->product_category_id;?>">Edit</a>
-									<a href="#" class="btn btn-danger btn-sm btn-delete" data-id="<?= $row->product_id;?>">Delete</a>
-								</td>
-							</tr>
-						<?php endforeach; ?>
-				</tbody>
-			</table>
+				<div class="float-left">
+					<h3>Product Lists</h3>
+				</div>
+				<div class="float-right">
+					<button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#addModal"> Add New Product Record </button>
+				</div>
+				<table id="tblproduct" class="mt table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Product Name</th>
+							<th>Price</th>
+							<th>Category</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
 			</div> <!-- end container -->
 		</div> <!-- Layout Side nav Content -->
-
+	<?php echo view('main_side_bar'); ?>
 		<!-- Modal Add Product -->
 		<form action="" method="post">
 			<div class="modal fade" id="addModal" tabindex="1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -68,12 +61,7 @@
 							</div>
 							<div class="form-group">
 								<label>Category</label>
-								<select name="product_category" id="product_category" class="form-control">
-									<option value="">-Select-</option>
-									<?php foreach($category as $row): ?>
-									<option value="<?= $row->category_id; ?>"> <?= $row->category_name; ?></option>
-									<?php endforeach; ?>
-								</select>
+								<div id="category">
 							</div>
 						</div>
 						<div class="modal-footer">
@@ -85,22 +73,57 @@
 			</div>
 		</form>
 
-	<?php echo view('main_side_bar'); ?>
 
 	<!-- Include Additional JS Files-->
 	<script type="text/javascript" src="js/jquery-3.5.1.js"></script>
 	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-        <script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-	<script>
-		$(document).ready( function () {
+	<script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	<script type="text/JavaScript" src="js/jquery.flexbox.min.js"> </script>
+<script>
+$(document).ready( function () {
+	var dataTable;
 
-			$('#tblproduct').DataTable({
-					"bJQueryUI": true,
-							"bLengthChange": true,
-							"bAutoWidth": false,
+	fetch_data();
+	//----------------------------------------------------------------------
+
+	if(typeof dataTable == 'undefined') {
+		dataTable = $('#tblproduct').dataTable({
+			"bJQueryUI": true,
+			"bLengthChange": true,
+			"bAutoWidth": false,
+		});
+	}
+
+	//----------------------------------------------------------------------
+	function fetch_data() {
+		$.ajax({
+		url: '<?php echo site_url("product/fetch_data"); ?>',
+			dataType: 'json',
+			success: function(response) {
+				if (response.length > 0) {
+					for(var i in response) {
+						dataTable.fnAddData([
+							response[i].product_id,
+							response[i].product_name,
+							response[i].product_price,
+							response[i].category_name,
+							'<a class="btn btn-info btn-sm btn-edit" href="#" data-id="' + response[i].product_id + '" data-name="' + response[i].product_name + '" data-price="' + response[i].product_price + '" data-category_id="' + response[i].product_category_id + '">Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].product_id + '">Delete</a>'
+							], false);
+						}
+						dataTable.fnDraw(true);
+					} else {
+
+					}
+				}
 			});
 
-		});
-	</script>
-	</body>
+		//to show list for auto complete customer Name Text Box
+		$('#category').flexbox('index.php/product/get_category', {selectBehavior: false, watermark: '', paging: true, allowInput: true, autoCompleteFirstMatch: false});
+		$('#category_ctr').css('width', '200px');
+		$('#category_input').css('width', '200px');
+	}
+	//----------------------------------------------------------------------
+	});
+</script>
+</body>
 </html>

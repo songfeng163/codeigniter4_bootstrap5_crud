@@ -3,16 +3,16 @@ namespace App\Controllers;
 
 use CodeIgniter\Controller;
 use App\Models\Product_model;
-use App\Models\Category_model;
 
 class Product extends Controller {
 
+	//--------------------------------------------------------------------------
 	public function index() {
 		// $data['product'] = $prod_model->get()->join('category', 'category_id=product_category_id', 'left')->orderBy('product_id', 'DESC');
 		// $cat_model = new Category_model();
 		// $data['category'] = $cat_model->orderBy('category_id', 'DESC')->findAll();
 
-		$db = db_connect();
+		// $db = db_connect();
 		// $db->reconnect();
 		// $db->close();
 		$data = array();
@@ -25,26 +25,37 @@ class Product extends Controller {
 		// $query = $db->query($sql);
 		// $data['category'] = $query->getResult();
 
-		// $prod_model = new Product_model();
-		// $data['product'] = $prod_model->getProduct->getResult();
-		//$cat_model = new Category_model();
+		$prod_model = new Product_model();
+		$data['category'] = $prod_model->getCategory;
+		$data['product'] = $prod_model->getProduct;
 
-		$db      = \Config\Database::connect();
-		$builder = $db->table('category');
-		$query = $builder->get();
-		$data['category'] = $query->getResult();
+		// $db      = \Config\Database::connect();
+		// $builder = $db->table('category');
+		// $query = $builder->get();
+		// $data['category'] = $query->getResult();
 
-		$db      = \Config\Database::connect();
-		$builder = $db->table('product');
-		$builder->select('*');
-		$builder->join('category', 'category_id = product_category_id', 'left');
-		$query = $builder->get();
-		$data['product'] = $query->getResult();
+		// $db      = \Config\Database::connect();
+		// $builder = $db->table('product');
+		// $builder->select('*');
+		// $builder->join('category', 'category_id = product_category_id', 'left');
+		// $query = $builder->get();
+		// $data['product'] = $query->getResult();
 
 		// echo view('main_side_bar');
 		echo view('test_view_1', $data);
 	}
 
+	//--------------------------------------------------------------------------
+	public function fetch_data() {
+		$db      = \Config\Database::connect();
+		$builder = $db->table('product');
+		$builder->select('*');
+		$builder->join('category', 'category_id = product_category_id', 'left');
+		$query = $builder->get();
+		echo json_encode($query->getResult());
+	}
+
+	//--------------------------------------------------------------------------
 	public function save() {
 		$model = new Product_model();
 		$validation =  \Config\Services::validation();
@@ -82,6 +93,27 @@ class Product extends Controller {
 		}
 	}
 
+	//--------------------------------------------------------------------------
+    function get_category() {
+        if (isset($_REQUEST['q'])) {
+            $sql = "SELECT category_id as id, concat(category_id, '-', category_name) as name FROM category WHERE category_id LIKE '%" . $_REQUEST['q'] . "%' OR category_name LIKE '%" . $_REQUEST['q'] . "%'";
+		    $db = db_connect();
+            $query = $db->query($sql);
+        } else {
+            $sql = "";
+            $query = $this->db->query($sql);
+        }
+
+        if ($query->getNumRows() > 0) {
+            $result = json_encode($query->getResult('array'));
+            $result = '{"results":' . $result . '}';
+            echo $result;
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+	//--------------------------------------------------------------------------
 	public function update() {
 		$model = new Product_model();
 		$id = $this->request->getPost('product_id');
@@ -92,11 +124,13 @@ class Product extends Controller {
 		);
 	}
 
+	//--------------------------------------------------------------------------
 	public function delete() {
 		$model = new Product_model();
 		$id = $this->request->getPost('product_id');
 		$model->deleteProduct($id);
 		return redirect()->to('/product');
 	}
+	//--------------------------------------------------------------------------
 }
 

@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 
 class Product_model extends Model {
 
-	// protected $table = 'product';
+	protected $table = 'product';
     //
 	// protected $primaryKey = 'product_id';
     //
@@ -16,7 +16,8 @@ class Product_model extends Model {
 	public function getCategory() {
 		$db      = \Config\Database::connect();
 		$builder = $db->table('category');
-		return $builder->get();
+		$query = $builder->get();
+		return $query->getResult();
 	}
 
 	public function getProduct() {
@@ -24,7 +25,8 @@ class Product_model extends Model {
 		$builder = $db->table('product');
 		$builder->select('*');
 		$builder->join('category', 'category_id = product_category_id', 'left');
-		return $builder->get();
+		$query = $builder->get();
+		return $query->getResult();
 	}
 
 	public function saveProduct($data) {
