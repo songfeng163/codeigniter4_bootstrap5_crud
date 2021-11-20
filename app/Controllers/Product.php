@@ -21,11 +21,40 @@ class Product extends Controller {
 		$query = $builder->get();
 		echo json_encode($query->getResult());
 	}
+	//--------------------------------------------------------------------------
+	public function fetchById() {
+		$obj = json_decode($this->request->getPost('jsarray'));
+		$db      = \Config\Database::connect();
+		$builder = $db->table('product');
+		$builder->select('*');
+		$builder->join('category', 'category_id = product_category_id', 'left');
+		$builder->where('product_id', $obj->product_id);
+		$query = $builder->get();
+		echo json_encode($query->getRow());
+	}
+	//--------------------------------------------------------------------------
+	public function validate_data() {
+		$validation =  \Config\Services::validation();
 
+		$rules  = [
+			'product_name'  =>  'required|min_length[2]|max_length[100]',
+			'product_price' =>  'required|decimal',
+			'product_category_id' =>  'required'
+		];
+
+		$messages = [
+			'product_name' => [
+				'required' => 'Product name is required.',
+				'min_length' => 'Minimum 2 characters.',
+				'max_length' => 'Maximum 100 characters.',
+			],
+		];
+
+		return $validation->setRules($rules, $messages);
+	}
 	//--------------------------------------------------------------------------
 	public function save() {
 		$obj = json_decode($this->request->getPost('jsarray'));
-		$validation =  \Config\Services::validation();
 
 		$data = array(
 			'product_name'			=> $obj->product_name,
@@ -33,38 +62,50 @@ class Product extends Controller {
 			'product_category_id'	=> $obj->category_id,
 		);
 
-		$rules  = [
-			'product_name'  =>  'required|min_length[2]|max_length[100]',
-			'product_price' =>  'required|decimal',
-			'product_category_id' =>  'required'
-		];
-                $messages = [
-                    'product_name' => [
-                        'required' => 'Product name is required.',
-                        'min_length' => 'Minimum 2 characters.',
-                        'max_length' => 'Maximum 100 characters.',
-                    ],
-                ];
+		$db      = \Config\Database::connect();
+		$builder = $db->table('product');
 
+		$validation = $this->validate_data();
 
-                $validation->setRules($rules, $messages);
+		if ($validation->run($data)) {
+			$builder->insert($data);
+			$msg_validation['pr_id'] = $db->insertID();
+			$msg_validation['valid'] = 'Success';
+
+		} else {
+			$errors = $validation->listErrors();
+			$msg_validation['valid'] = $errors;
+		}
+		echo json_encode($msg_validation);
+	}
+	//--------------------------------------------------------------------------
+	public function edit() {
+		$obj = json_decode($this->request->getPost('jsarray'));
+
+		$data = array(
+			'product_id'			=> $obj->product_id,
+			'product_name'			=> $obj->product_name,
+			'product_price'			=> $obj->product_price,
+			'product_category_id'	=> $obj->category_id,
+		);
 
 		$db      = \Config\Database::connect();
 		$builder = $db->table('product');
 
+		$validation = $this->validate_data();
+
 		if ($validation->run($data)) {
-			$builder->insert($data);
-                        $msg_validation['pr_id'] = $db->insertID();
-                        $msg_validation['valid'] = 'Success';
+			$builder->where('product_id', $obj->product_id);
+			$builder->update($data);
+			$msg_validation['pr_id'] = $obj->product_id;
+			$msg_validation['valid'] = 'Success';
 
 		} else {
-                    $errors = $validation->listErrors();
-                    $msg_validation['valid'] = $errors;
-                }
-
-                echo json_encode($msg_validation);
-
-    }
+			$errors = $validation->listErrors();
+			$msg_validation['valid'] = $errors;
+		}
+		echo json_encode($msg_validation);
+	}
 
 	//--------------------------------------------------------------------------
     function get_category() {
