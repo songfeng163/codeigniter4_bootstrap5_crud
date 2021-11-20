@@ -11,9 +11,6 @@
 	</head>
 	<body>
 		<div id="layoutSidenav_content">
-
-
-
 			<div class="container col-md-7 col-sm-7 col-lg-7 ">
 				<div class="pt-5"> </div>
 				<div class="pt-5 float-left">
@@ -82,9 +79,10 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<td> <button type="button" name="Exit" id="exit" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i>Exit</button></td>
-						<td> <button type="button" name="btnSubmit" id="btnSubmit" class="btn btn-primary"><i class="fa fa-fw fa-plus-square"></i>Save</button></td>
-						<input type="hidden" id="category_hidden"></div>
+					<button type="button" name="Exit" id="exit" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i>Exit</button></td>
+					<button type="button" name="btnSubmit" id="btnSubmit" class="btn btn-primary"><i class="fa fa-fw fa-plus-square"></i>Save</button></td>
+					<input type="hidden" id="category_hidden"></div>
+					<div id="msgAddValidation"><p></p></div>
 				</div>
 			</div>
 		</div>
@@ -211,9 +209,9 @@ $(document).ready(function() {
 					// $("#update").button("enable");
 					// $("#btnSubmit").button("disable");
 				} else {
-					$('#addModal').modal('hide');
-					$('#msgDialog > p').html(response.valid);
-					$('#msgModal').modal('show');
+					// $('#addModal').modal('hide');
+					$('#msgAddValidation > p').html(response.valid);
+					// $('#msgModal').modal('show');
 					// $("#btnSubmit").button("enable");
 				}
 			}
