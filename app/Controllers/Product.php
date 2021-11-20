@@ -8,41 +8,8 @@ class Product extends Controller {
 
 	//--------------------------------------------------------------------------
 	public function index() {
-		// $data['product'] = $prod_model->get()->join('category', 'category_id=product_category_id', 'left')->orderBy('product_id', 'DESC');
-		// $cat_model = new Category_model();
-		// $data['category'] = $cat_model->orderBy('category_id', 'DESC')->findAll();
-
-		// $db = db_connect();
-		// $db->reconnect();
-		// $db->close();
-		$data = array();
-
-		// $sql = "SELECT * FROM product LEFT JOIN category ON category_id = product_category_id";
-		// $query = $db->query($sql);
-		// $data['product'] = $query->getResult();
-        //
-		// $sql = "SELECT * FROM category";
-		// $query = $db->query($sql);
-		// $data['category'] = $query->getResult();
-
-		$prod_model = new Product_model();
-		$data['category'] = $prod_model->getCategory;
-		$data['product'] = $prod_model->getProduct;
-
-		// $db      = \Config\Database::connect();
-		// $builder = $db->table('category');
-		// $query = $builder->get();
-		// $data['category'] = $query->getResult();
-
-		// $db      = \Config\Database::connect();
-		// $builder = $db->table('product');
-		// $builder->select('*');
-		// $builder->join('category', 'category_id = product_category_id', 'left');
-		// $query = $builder->get();
-		// $data['product'] = $query->getResult();
-
 		// echo view('main_side_bar');
-		echo view('test_view_1', $data);
+		echo view('test_view_1');
 	}
 
 	//--------------------------------------------------------------------------
@@ -57,41 +24,47 @@ class Product extends Controller {
 
 	//--------------------------------------------------------------------------
 	public function save() {
-		$model = new Product_model();
+		$obj = json_decode($this->request->getPost('jsarray'));
 		$validation =  \Config\Services::validation();
 
-		$validations  = [
+		$data = array(
+			'product_name'			=> $obj->product_name,
+			'product_price'			=> $obj->product_price,
+			'product_category_id'	=> $obj->category_id,
+		);
+
+		$rules  = [
 			'product_name'  =>  'required|min_length[2]|max_length[100]',
 			'product_price' =>  'required|decimal',
-			'product_category' =>  'required',
+			'product_category_id' =>  'required'
 		];
+                $messages = [
+                    'product_name' => [
+                        'required' => 'Product name is required.',
+                        'min_length' => 'Minimum 2 characters.',
+                        'max_length' => 'Maximum 100 characters.',
+                    ],
+                ];
 
-		$data = array(
-			'product_name'			=> $this->request->getPost('product_name'),
-			'product_price'			=> $this->request->getPost('product_price'),
-			'product_category_id'	=> $this->request->getPost('product_category'),
-		);
-		if ($this->request->getMethod() === 'post' && $this->validate($validations)) {
-			$model->saveProduct($data);
-			return redirect()->to('/product');
+
+                $validation->setRules($rules, $messages);
+
+		$db      = \Config\Database::connect();
+		$builder = $db->table('product');
+
+		if ($validation->run($data)) {
+			$builder->insert($data);
+                        $msg_validation['pr_id'] = $db->insertID();
+                        $msg_validation['valid'] = 'Success';
+
 		} else {
-			// $errors = array(
-			// 	'error' => $validations->listErrors()
-			// );
-			// $session()->set($errors);
-			// return redirect()->to('/product');
-			// echo view('product_view');
-			// echo view('product_view', [
-            //     'validation' => $this->validator
-            // ]);
-			$data["validation"] = $validation->getErrors();
-			// $session = \Config\Services::session();
-			$this->session = \Config\Services::session();
-			$this->session->start();
-			$this->session->set($data);
-			return redirect()->to('/product');
-		}
-	}
+                    $errors = $validation->listErrors();
+                    $msg_validation['valid'] = $errors;
+                }
+
+                echo json_encode($msg_validation);
+
+    }
 
 	//--------------------------------------------------------------------------
     function get_category() {
@@ -126,10 +99,24 @@ class Product extends Controller {
 
 	//--------------------------------------------------------------------------
 	public function delete() {
-		$model = new Product_model();
-		$id = $this->request->getPost('product_id');
-		$model->deleteProduct($id);
-		return redirect()->to('/product');
+		$obj = json_decode($this->request->getPost('jsarray'));
+		$db      = \Config\Database::connect();
+		$builder = $db->table('product');
+		$builder->where('product_id', $obj->product_id);
+		if($builder->delete()) {
+			$msg_validation['valid'] = 'deleted';
+			echo json_encode($msg_validation);
+			// echo "deleted";
+		} else {
+			// echo "failed";
+			$msg_validation['valid'] = 'failed';
+			echo json_encode($msg_validation);
+		}
+
+		// $model = new Product_model();
+		// $id = $this->request->getPost('product_id');
+		// $model->deleteProduct($id);
+		// return redirect()->to('/product');
 	}
 	//--------------------------------------------------------------------------
 }
