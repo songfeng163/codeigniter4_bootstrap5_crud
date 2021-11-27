@@ -4,12 +4,11 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/jquery.dataTables.min.css">
-		<link rel="stylesheet" href="css/auto_complete_styles.css">
-		<link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+
+		<?php echo view('include_css'); ?>
 	</head>
 	<body>
+		<?php echo view('main_side_bar'); ?>
 		<div id="layoutSidenav_content">
 			<div class="container col-md-7 col-sm-7 col-lg-7 ">
 				<div class="pt-5"> </div>
@@ -37,7 +36,6 @@
 				</table>
 			</div> <!-- end container -->
 		</div> <!-- Layout Side nav Content -->
-	<?php echo view('main_side_bar'); ?>
 
 	<!-- Modal for Message -->
 	<div class="modal fade" id="msgModal" tabindex="1" aria-hidden="true">
@@ -115,14 +113,8 @@
     </form>
     <!-- End Modal Delete Product-->
 
-
 	<!-- Include Additional JS Files-->
-	<script type="text/javascript" src="js/jquery-3.5.1.js"></script>
-	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-	<script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-	<script type="text/JavaScript" src="js/jquery.autocomplete.js"> </script>
-	<script type="text/JavaScript" src="js/jquery.mockjax.js"> </script>
-	<script type="text/JavaScript" src="js/jquery.json-2.2.min.js"> </script>
+	<?php echo view('include_js') ?>
 <script>
 
 $(document).ready(function() {
@@ -193,7 +185,7 @@ $(document).ready(function() {
 		}
 		//----------------------------------------------------------------------
 		$('#category_input').autocomplete({
-			serviceUrl: 'index.php/product/get_category',
+			serviceUrl: '<?php echo site_url("product/get_category"); ?>',
 			onSelect:function (suggestion) {
 				// alert('You selected: ' + suggestion.value +', ' + suggestion.data);
 				$('#category_hidden').val(suggestion.data);
@@ -305,15 +297,14 @@ $(document).ready(function() {
 				});
 			});
 		//----------------------------------------------------------------------
-		    $('#show_data').on('click','.btn-delete',function(){
+	    $('#show_data').on('click','.btn-delete',function(){
 			// get data from button edit
 			const id = $(this).data('id');
 			// Set data to Form Edit
 			$('#product_id').val(id);
 			// Call Modal Edit
 			$('#deleteModal').modal('show');
-
-			});
+		});
 
 		//----------------------------------------------------------------------
 		$('#btnDelete').button().click(function() {

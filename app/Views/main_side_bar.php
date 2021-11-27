@@ -1,5 +1,3 @@
-<link href="css/styles.css" rel="stylesheet" />
-<script src="font-awesome/js/all.min.js" crossorigin="anonymous"></script>
     <div class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
@@ -21,7 +19,7 @@
                         <li><a class="dropdown-item" href="#!">Settings</a></li>
                         <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#!">Logout</a></li>
+						<li><a class="dropdown-item" href="<?php echo site_url('/logout') ?>">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -32,7 +30,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="index.html">
+                            <a class="nav-link" href="<?php echo site_url('/product') ?>">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
@@ -70,5 +68,4 @@
                 </nav>
             </div>
         </div>
-        <script src="js/scripts.js"></script>
     </div>
