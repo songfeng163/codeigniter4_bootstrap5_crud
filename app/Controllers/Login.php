@@ -6,12 +6,14 @@ use App\Models\UserModel;
 
 class Login extends BaseController
 {
+	//-------------------------------------------------------
     public function index()
     {
         helper(['form']);
         echo view('login');
     }
 
+	//-------------------------------------------------------
     public function loginAuth()
     {
         $session = session();
@@ -35,12 +37,12 @@ class Login extends BaseController
                 ];
 
                 $session->set($ses_data);
-                return redirect()->to('/product');
-		
+                return redirect()->to('/login/load_dash_board');
+
 
             }else{
                 $session->setFlashdata('msg', 'Password is incorrect.');
-                
+
                return redirect()->to('/login');
             }
 
@@ -51,9 +53,15 @@ class Login extends BaseController
         }
     }
 
+	//-------------------------------------------------------
 	public function logout() {
 		$session = session();
                 $session->destroy();
                 return redirect()->to('/login');
+	}
+	//-------------------------------------------------------
+
+	public function load_dash_board() {
+			echo view('dash_board');
 	}
 }
