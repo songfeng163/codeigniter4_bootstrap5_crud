@@ -4,12 +4,12 @@ namespace App\Controllers;
 use CodeIgniter\Controller;
 use App\Models\UserModel;
 
-class SigninController extends Controller
+class Login extends BaseController
 {
     public function index()
     {
         helper(['form']);
-        echo view('signin');
+        echo view('login');
     }
 
     public function loginAuth()
@@ -35,17 +35,25 @@ class SigninController extends Controller
                 ];
 
                 $session->set($ses_data);
-                // return redirect()->to('/product');
-				echo view('test_view_1');
+                return redirect()->to('/product');
+		
 
             }else{
                 $session->setFlashdata('msg', 'Password is incorrect.');
-                return redirect()->to('/signin');
+                
+               return redirect()->to('/login');
             }
 
         }else{
             $session->setFlashdata('msg', 'Email does not exist.');
-            return redirect()->to('/signin');
+			//$session->set('isLoggedIn', FALSE);
+            return redirect()->to('/login');
         }
     }
+
+	public function logout() {
+		$session = session();
+                $session->destroy();
+                return redirect()->to('/login');
+	}
 }

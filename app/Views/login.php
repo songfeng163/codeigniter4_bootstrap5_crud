@@ -22,9 +22,9 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
 									<div class="card-header"><h2>Login</h2></div>
                                     <div class="card-body">
-										<form action='<?php echo site_url("SigninController/loginAuth"); ?>' method="post">
+										<form action='<?php echo site_url("login/loginAuth"); ?>' method="post">
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" name="email" id="email" type="email" value="<?= set_value('email') ?>" class="form-control">
+                                                <input class="form-control" name="email" id="email" type="email" value="" class="form-control">
                     </divplaceholder="name@example.com" />
                                                 <label for="inputEmail">Email address</label>
                                             </div>

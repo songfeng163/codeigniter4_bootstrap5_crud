@@ -4,12 +4,19 @@ namespace App\Controllers;
 use CodeIgniter\Controller;
 use App\Models\Product_model;
 
-class Product extends Controller {
-
-	//--------------------------------------------------------------------------
+class Product extends BaseController {
+// if user not logged in
+    
+        //--------------------------------------------------------------------------
 	public function index() {
 		// echo view('main_side_bar');
-		echo view('test_view_1');
+                if(!session()->get('isLoggedIn')) {
+                   return redirect()->to('/login');
+                } else {
+                    
+                    echo view('product');
+                }
+		
 	}
 
 	//--------------------------------------------------------------------------
