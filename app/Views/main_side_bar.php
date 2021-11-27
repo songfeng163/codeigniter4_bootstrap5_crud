@@ -43,21 +43,38 @@
                             <div class="collapse" id="collapseRegistration" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="<?php echo site_url('/customer') ?>">Customer</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer_group') ?>">Customer Group</a>
                                     <a class="nav-link" href="<?php echo site_url('/product') ?>">Product</a>
-                                    <a class="nav-link" href="<?php echo site_url('/vendor') ?>">Product</a>
+                                    <a class="nav-link" href="<?php echo site_url('/product_cat') ?>">Product Category</a>
+                                    <a class="nav-link" href="<?php echo site_url('/vendor') ?>">Vendor</a>
                                 </nav>
                             </div>
 
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseTran" aria-expanded="false" aria-controls="collapseTran">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Pages
+                                Transaction
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
-                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                            <div class="collapse" id="collapseTran" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="login.html">Login</a>
-                                    <a class="nav-link" href="register.html">Register</a>
-                                    <a class="nav-link" href="password.html">Forgot Password</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Sales</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Purhchse</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Money Receipt</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Vendor Payment</a>
+                                </nav>
+                            </div>
+
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReport" aria-expanded="false" aria-controls="collapseReport">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Report
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapseReport" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Sales</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Purhchse</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Money Receipt</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Vendor Payment</a>
                                 </nav>
                             </div>
                         </div>

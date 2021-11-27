@@ -28,3 +28,5 @@ Balance Sheet
 
 
 5. Multiple Project in Same CI Installation
+
+ALTER TABLE `category` ADD `note` varchar(100) COLLATE 'latin1_swedish_ci' NULL;
