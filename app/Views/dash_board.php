@@ -6,11 +6,11 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
 		<?php echo view('include_css'); ?>
-	<style type="text/css" media="all">
-		#layoutSidenav_content {
-			margin-left: 177px;
-		}
-	</style>
+		<style type="text/css" media="all">
+			#layoutSidenav_content {
+				margin-left: 177px;
+			}
+		</style>
 	</head>
     <!-- <body class="bg&#45;primary bg&#45;gradient"> -->
     <body class="">
