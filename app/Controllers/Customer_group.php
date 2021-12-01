@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Controllers;
+
 use CodeIgniter\Controller;
 
 class Customer_group extends BaseController {

@@ -6,62 +6,69 @@
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 
 		<?php echo view('include_css'); ?>
+	<style type="text/css" media="all">
+		#layoutSidenav_content {
+			margin-left: 177px;
+		}
+	</style>
 	</head>
-    <body class="bg-primary bg-gradient">
+    <!-- <body class="bg&#45;primary bg&#45;gradient"> -->
+    <body class="">
 		<?php echo view('main_side_bar'); ?>
 		<div id="layoutSidenav_content">
 			<main>
-					<div class="container-fluid col-md-8 col-sm-8 col-lg-8 ">
+					<div class="container-fluid col-md-12 col-sm-12 col-lg-11 ">
 						<div class="pt-5"> </div>
-                        <ol class="breadcrumb mb-4 bg-info">
-							<h1 class="mt-4">Dashboard</h1>
+						<div class="pt-5"> </div>
+                        <ol class="breadcrumb bg-light text-muted">
+							<li> <i class="fas fa-tachometer-alt"></i> Dashboard </li>
 						</ol>
                         <div class="row">
                             <div class="col-xl-3 col-md-6">
-                                <div class="card bg-dark text-white mb-4">
-									<div class="card-body">
+                                <div class="card mb-4">
+									<div class="card-body  bg-primary text-white">
 										<i class="fa fa-shopping-cart fa-2x"></i>
 										Today's Sales
 									</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
+									<div class="card-footer bg-light d-flex align-items-center justify-content-between">
+                                        <a class="small text-blue stretched-link" href="#">View Details </a>
+                                        <div class="small"><i class="fas fa-angle-right"></i></div>
+									</div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-md-6">
-                                <div class="card bg-secondary text-white mb-4">
-									<div class="card-body">
+                                <div class="card mb-4">
+									<div class="card-body bg-secondary text-white">
                                         <i class="fa fa-truck fa-2x"></i>
 										Today's Purchase
 									</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        <a class="small text-blue stretched-link" href="#">View Details</a>
+                                        <div class="small"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-md-6">
-                                <div class="card bg-dark text-white mb-4">
-									<div class="card-body">
+                                <div class="card mb-4">
+									<div class="card-body bg-success text-white">
 										<i class="fa fa-money-bill-alt fa-2x" aria-hidden="true"></i>
 										Cash Balance
 									</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        <a class="small text-blue stretched-link" href="#">View Details</a>
+                                        <div class="small"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-md-6">
-                                <div class="card bg-secondary text-white mb-4">
-									<div class="card-body">
+                                <div class="card mb-4">
+									<div class="card-body bg-secondary text-white ">
 										<i class="fa fa-university fa-2x" aria-hidden="true"></i>
 										Bank Balance
 									</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                        <a class="small text-blue stretched-link" href="#">View Details</a>
+                                        <div class="small "><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
                             </div>

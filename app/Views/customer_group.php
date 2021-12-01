@@ -8,13 +8,16 @@
 	</head>
 
 	<body class="bg-white">
+
 		<?php echo view('main_side_bar'); ?>
+
 		<div id="layoutSidenav_content">
-			<div class="container col-md-7 col-sm-7 col-lg-7 ">
+			<div class="container col-md-5 col-sm-5 col-lg-5 ">
 				<div class="pt-5"> </div>
 				<div class="pt-5 float-left">
 					<h3>Customer Group</h3>
 				</div>
+
 				<div class="pt-5"> </div>
 				<div class="float-right">
 					<button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#addModal"> Add New Group</button>
@@ -75,6 +78,8 @@
 					<button type="button" name="Exit" id="exit" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i>Exit</button></td>
 					<button type="button" name="btnSubmit" id="btnSubmit" class="btn btn-primary"><i class="fa fa-fw fa-plus-square"></i>Save</button></td>
 					<button type="button" name="btn" id="btnEdit" class="btn btn-primary"><i class="fa fa-fw fa-edit"></i>Update</button></td>
+
+					<!-- To Show Validation Message to the User -->
 					<div id="msgAddValidation"><p></p></div>
 				</div>
 			</div>
@@ -98,7 +103,6 @@
                <h4>Are you sure want to delete this group?</h4>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="cust_group_id" id="cust_group_id">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                 <button id="btnDelete" type="button" class="btn btn-primary">Yes</button>
             </div>
@@ -108,20 +112,26 @@
     </form>
     <!-- End Modal Delete Product-->
 
+	<!-- Field to detect Save/Update State of Add Modal Form  -->
+	<!-- Field to Submit ID for Save/Edit/Delete of the Form -->
+	<input type="hidden" name="cust_group_id" id="cust_group_id">
+
 	<!-- Include Additional JS Files-->
 	<?php echo view('include_js') ?>
-<script>
 
-$(document).ready(function() {
+	<script>
 
-	var dataTable;
-	display_data();
+	$(document).ready(function() {
 
-	//----------------------------------------------------------------------
-	function clear_field() {
-		$(':text').val('');
-		$('input[type="hidden"]').val('');
-		$('#msgAddValidation > p').html('');
+		var dataTable;
+
+		display_data();
+
+		//----------------------------------------------------------------------
+		function clear_field() {
+			$(':text').val('');
+			$('input[type="hidden"]').val('');
+			$('#msgAddValidation > p').html('');
 		}
 		//----------------------------------------------------------------------
 		$("#addModal").on("hidden.bs.modal", function(){
@@ -139,25 +149,9 @@ $(document).ready(function() {
 			}
 		});
 		//----------------------------------------------------------------------
-		function display_data() {
-			if(typeof dataTable == 'undefined') {
-				dataTable = $('#tblcustgroup').dataTable({
-				"bJQueryUI": false,
-					"bLengthChange": true,
-					"bAutoWidth": false,
-					"aoColumns":[
-					{sClass:"left"},
-					{sClass:"left", "sWidth":"200px"},
-					{sClass:"right"},
-					{sClass:"center"}]
-				});
-			}
-			fetch_data();
-		}
-		//----------------------------------------------------------------------
 		function fetch_data() {
 			$.ajax({
-			url: '<?php echo site_url("customer_group/fetch_data"); ?>',
+				url: '<?php echo site_url("customer_group/fetch_data"); ?>',
 				dataType: 'json',
 				success: function(response) {
 					if (response.length > 0) {
@@ -167,14 +161,30 @@ $(document).ready(function() {
 								response[i].group_name,
 								response[i].note,
 								'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].id + '"><i class="fa fa-trash"></i>Delete</a>'
-								], false);
-							}
-							dataTable.fnDraw(true);
-						} else {
-
+							], false);
 						}
+						dataTable.fnDraw(true);
+					} else {
+
 					}
+				}
+			});
+		}
+		//----------------------------------------------------------------------
+		function display_data() {
+			if(typeof dataTable == 'undefined') {
+				dataTable = $('#tblcustgroup').dataTable({
+					"bJQueryUI": false,
+					"bLengthChange": true,
+					"bAutoWidth": false,
+					"aoColumns":[
+						{sClass:"left", "sWidth":"100px"},
+						{sClass:"left", "sWidth":"200px"},
+						{sClass:"left"},
+						{sClass:"center"}]
 				});
+			}
+			fetch_data();
 		}
 		//-----------------------------------------------------------------
 		$('#btnSubmit').button().click(function() {
@@ -195,22 +205,25 @@ $(document).ready(function() {
 							$('#group_name').val(),
 							$('#group_note').val(),
 							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.group_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.group_id + '"><i class="fa fa-trash"></i>Delete</a>'
-							]);
+						]);
 						clear_field();
 						$('#addModal').modal('hide');
 						$('#msgModal').modal('show');
-						} else {
-							$('#msgAddValidation > p').html(response.valid);
-						}
+					} else {
+						$('#msgAddValidation > p').html(response.valid);
 					}
-				});
+				}
 			});
+		});
 		//----------------------------------------------------------------------
 	    $('#show_data').on('click','.btn-edit',function() {
 			// get data from button edit
-			const id = $(this).data('id');
+
+			//To Update the Table Row by Jquery after Edit/Update
 			update_position = dataTable.fnGetPosition($(this).parents('tr')[0]);
+
 			// Set data to Form Edit
+			const id = $(this).data('id');
 			$('#cust_group_id').val(id);
 
 			var jsonStr = [];
@@ -236,10 +249,10 @@ $(document).ready(function() {
 		$('#btnEdit').button().click(function() {
 			var jsonStr = [];
 			jsonStr = {"group_id":$('#cust_group_id').val(),
-						"group_name":$('#group_name').val(),
-						"group_note":$('#group_note').val()};
+					   "group_name":$('#group_name').val(),
+					   "group_note":$('#group_note').val()};
 			$.ajax({
-			url: '<?php echo site_url("customer_group/edit"); ?>',
+				url: '<?php echo site_url("customer_group/edit"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
@@ -252,19 +265,19 @@ $(document).ready(function() {
 							$('#group_name').val(),
 							$('#group_note').val(),
 							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.group_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.group_id + '"><i class="fa fa-trash"></i>Delete</a>'
-							], update_position);
+						], update_position);
 						clear_field();
 						$('#addModal').modal('hide');
 						$('#msgModal').modal('show');
-						} else {
-							$('#msgAddValidation > p').html(response.valid);
-							}
+					} else {
+						$('#msgAddValidation > p').html(response.valid);
 					}
-				});
+				}
 			});
+		});
 		//----------------------------------------------------------------------
 	    $('#show_data').on('click','.btn-delete',function(){
-			// get data from button edit
+			// get data from button delete
 			const id = $(this).data('id');
 			// Set data to Form Edit
 			$('#cust_group_id').val(id);
@@ -274,32 +287,34 @@ $(document).ready(function() {
 
 		//----------------------------------------------------------------------
 		$('#btnDelete').button().click(function() {
-				var jsonStr = [];
-				jsonStr = {"cust_group_id":$('#cust_group_id').val()};
-				$.ajax({
-						url: '<?php echo site_url("customer_group/delete"); ?>',
-						type: 'POST',
-						dataType:'json',
-						data: {'jsarray': $.toJSON(jsonStr)},
-						success: function(response) {
-								$('#deleteModal').modal('hide');
-								if(response.valid == 'deleted'){
-										$('[data-id="' + $('#cust_group_id').val() + '"]').parents('tr').fadeOut('slow', function() {
-												cur_tr = this;
-												dataTable.fnDeleteRow(cur_tr);
-											});
-										$('#msgDialog > p').html('Successfully ' + response.valid);
-										$('#msgModal').modal('show');
-									} else {
-											$('#msgDialog > p').html(response.valid + ' to delete');
-											$('#deleteModal').modal('hide');
-											$('#msgModal').modal('show');
-										}
-							}
-					});
+			var jsonStr = [];
+			jsonStr = {"cust_group_id":$('#cust_group_id').val()};
+			$.ajax({
+				url: '<?php echo site_url("customer_group/delete"); ?>',
+				type: 'POST',
+				dataType:'json',
+				data: {'jsarray': $.toJSON(jsonStr)},
+				success: function(response) {
+					$('#deleteModal').modal('hide');
+					if(response.valid == 'deleted'){
+						$('[data-id="' + $('#cust_group_id').val() + '"]').parents('tr').fadeOut('slow', function() {
+							cur_tr = this;
+							dataTable.fnDeleteRow(cur_tr);
+						});
+						$('#cust_group_id').val('');
+						$('#msgDialog > p').html('Successfully ' + response.valid);
+						$('#msgModal').modal('show');
+					} else {
+						$('#cust_group_id').val('');
+						$('#msgDialog > p').html(response.valid + ' to delete');
+						$('#deleteModal').modal('hide');
+						$('#msgModal').modal('show');
+					}
+				}
 			});
+		});
 		//----------------------------------------------------------------------
 	});
-</script>
+	</script>
 </body>
 </html>
