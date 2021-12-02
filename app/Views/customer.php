@@ -198,25 +198,26 @@
 		});
 		//----------------------------------------------------------------------
 		function fetch_data() {
-			$.ajax({
+			var request = $.ajax({
 				url: '<?php echo site_url("customer/fetch_data"); ?>',
 				dataType: 'json',
-				success: function(response) {
-					if (response.length > 0) {
-						for(var i in response) {
-							dataTable.fnAddData([
-								response[i].id,
-								response[i].customer_name,
-								response[i].present_address,
-								response[i].mobile,
-								response[i].note,
-								'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].id + '"><i class="fa fa-trash"></i>Delete</a>'
-							], false);
-						}
-						dataTable.fnDraw(true);
-					} else {
+			});
 
+			request.done(function(response) {
+				if (response.length > 0) {
+					for(var i in response) {
+						dataTable.fnAddData([
+							response[i].id,
+							response[i].customer_name,
+							response[i].present_address,
+							response[i].mobile,
+							response[i].note,
+							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].id + '"><i class="fa fa-trash"></i>Delete</a>'
+						], false);
 					}
+					dataTable.fnDraw(true);
+				} else {
+
 				}
 			});
 		}
@@ -251,29 +252,30 @@
 					   "credit_limit":$('#credit_limit').val(),
 					   "cust_group_id":$('#cust_group_hidden').val(),
 					   "cust_note":$('#cust_note').val()};
-			$.ajax({
+
+			var request = $.ajax({
 				url: '<?php echo site_url("customer/save"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
+			});
 
-				success: function(response) {
-					if(response.valid == "Success") {
-						$('#msgDialog > p').html("Data Saved Successfully");
-						//Show new records in the data table
-						dataTable.fnAddData([response.customer_id,
-							$('#cust_name').val(),
-							$('#present_address').val(),
-							$('#mobile_no').val(),
-							$('#cust_note').val(),
-							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.customer_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.customer_id + '"><i class="fa fa-trash"></i>Delete</a>'
-						]);
-						clear_field();
-						$('#addModal').modal('hide');
-						$('#msgModal').modal('show');
-					} else {
-						$('#msgAddValidation > p').html(response.valid);
-					}
+			request.done(function(response) {
+				if(response.valid == "Success") {
+					$('#msgDialog > p').html("Data Saved Successfully");
+					//Show new records in the data table
+					dataTable.fnAddData([response.customer_id,
+						$('#cust_name').val(),
+						$('#present_address').val(),
+						$('#mobile_no').val(),
+						$('#cust_note').val(),
+						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.customer_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.customer_id + '"><i class="fa fa-trash"></i>Delete</a>'
+					]);
+					clear_field();
+					$('#addModal').modal('hide');
+					$('#msgModal').modal('show');
+				} else {
+					$('#msgAddValidation > p').html(response.valid);
 				}
 			});
 		});
@@ -290,29 +292,29 @@
 
 			var jsonStr = [];
 			jsonStr = {"customer_id": id};
-			$.ajax({
+			var request = $.ajax({
 				url: '<?php echo site_url("customer/fetchById"); ?>',
 				type: 'POST',
 				dataType: 'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
-				success: function(response) {
-					if (response.id.length > 0) {
-						$('#customer_id').val(response.id);
-						$('#cust_name').val(response.customer_name),
-						$('#father_name').val(response.father_name),
-						$('#mother_name').val(response.mother_name),
-						$('#nid_no').val(response.national_id_card_no),
-						$('#present_address').val(response.present_address),
-						$('#mobile_no').val(response.mobile),
-						$('#email_add').val(response.email_address),
-						$('#credit_limit').val(response.credit_limit),
-						$('#cust_group_input').val(response.group_id + '-' + response.group_name),
-						$('#cust_group_hidden').val(response.group_id),
-						$('#cust_note').val(response.note),
-						$('#addModal').modal('show');
-					} else {
+			});
+			request.done(function(response) {
+				if (response.id.length > 0) {
+					$('#customer_id').val(response.id);
+					$('#cust_name').val(response.customer_name),
+					$('#father_name').val(response.father_name),
+					$('#mother_name').val(response.mother_name),
+					$('#nid_no').val(response.national_id_card_no),
+					$('#present_address').val(response.present_address),
+					$('#mobile_no').val(response.mobile),
+					$('#email_add').val(response.email_address),
+					$('#credit_limit').val(response.credit_limit),
+					$('#cust_group_input').val(response.group_id + '-' + response.group_name),
+					$('#cust_group_hidden').val(response.group_id),
+					$('#cust_note').val(response.note),
+					$('#addModal').modal('show');
+				} else {
 
-					}
 				}
 			});
 		});
@@ -330,29 +332,29 @@
 					   "credit_limit":$('#credit_limit').val(),
 					   "cust_group_id":$('#cust_group_hidden').val(),
 					   "cust_note":$('#cust_note').val()};
-			$.ajax({
+			var request = $.ajax({
 				url: '<?php echo site_url("customer/edit"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
+			});
 
-				success: function(response) {
-					if(response.valid == "Success") {
-						$('#msgDialog > p').html("Data Updated Successfully");
-						//Show new records in the data table
-						dataTable.fnUpdate([response.customer_id,
-							$('#cust_name').val(),
-							$('#present_address').val(),
-							$('#mobile_no').val(),
-							$('#cust_note').val(),
-							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.customer_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.customer_id + '"><i class="fa fa-trash"></i>Delete</a>'
-						], update_position);
-						clear_field();
-						$('#addModal').modal('hide');
-						$('#msgModal').modal('show');
-					} else {
-						$('#msgAddValidation > p').html(response.valid);
-					}
+			request.done(function(response) {
+				if(response.valid == "Success") {
+					$('#msgDialog > p').html("Data Updated Successfully");
+					//Show new records in the data table
+					dataTable.fnUpdate([response.customer_id,
+						$('#cust_name').val(),
+						$('#present_address').val(),
+						$('#mobile_no').val(),
+						$('#cust_note').val(),
+						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.customer_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.customer_id + '"><i class="fa fa-trash"></i>Delete</a>'
+					], update_position);
+					clear_field();
+					$('#addModal').modal('hide');
+					$('#msgModal').modal('show');
+				} else {
+					$('#msgAddValidation > p').html(response.valid);
 				}
 			});
 		});
@@ -370,27 +372,27 @@
 		$('#btnDelete').button().click(function() {
 			var jsonStr = [];
 			jsonStr = {"customer_id":$('#customer_id').val()};
-			$.ajax({
+			var request = $.ajax({
 				url: '<?php echo site_url("customer/delete"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
-				success: function(response) {
+			});
+			request.done(function(response) {
+				$('#deleteModal').modal('hide');
+				if(response.valid == 'deleted'){
+					$('[data-id="' + $('#customer_id').val() + '"]').parents('tr').fadeOut('slow', function() {
+						cur_tr = this;
+						dataTable.fnDeleteRow(cur_tr);
+					});
+					$('#customer_id').val('');
+					$('#msgDialog > p').html('Successfully ' + response.valid);
+					$('#msgModal').modal('show');
+				} else {
+					$('#customer_id').val('');
+					$('#msgDialog > p').html(response.valid + ' to delete');
 					$('#deleteModal').modal('hide');
-					if(response.valid == 'deleted'){
-						$('[data-id="' + $('#customer_id').val() + '"]').parents('tr').fadeOut('slow', function() {
-							cur_tr = this;
-							dataTable.fnDeleteRow(cur_tr);
-						});
-						$('#customer_id').val('');
-						$('#msgDialog > p').html('Successfully ' + response.valid);
-						$('#msgModal').modal('show');
-					} else {
-						$('#customer_id').val('');
-						$('#msgDialog > p').html(response.valid + ' to delete');
-						$('#deleteModal').modal('hide');
-						$('#msgModal').modal('show');
-					}
+					$('#msgModal').modal('show');
 				}
 			});
 		});

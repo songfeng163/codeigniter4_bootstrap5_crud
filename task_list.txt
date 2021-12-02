@@ -30,3 +30,21 @@ Balance Sheet
 5. Multiple Project in Same CI Installation
 
 ALTER TABLE `category` ADD `note` varchar(100) COLLATE 'latin1_swedish_ci' NULL;
+
+
+DB Change:
+------------------------
+1. ALTER TABLE `tbl_customer` ADD FOREIGN KEY (`group_id`) REFERENCES `tbl_customer_group` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+2. ALTER TABLE `tbl_sales` ADD FOREIGN KEY (`customer_id`) REFERENCES `tbl_customer` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+3. ALTER TABLE `tbl_customer_payment` ADD FOREIGN KEY (`customer_id`) REFERENCES `tbl_customer` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+4. ALTER TABLE `tbl_product` ADD FOREIGN KEY (`prod_cat_id`) REFERENCES `tbl_product_category` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+
+
+
+
+
+
+
+
+
+

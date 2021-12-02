@@ -150,23 +150,23 @@
 		});
 		//----------------------------------------------------------------------
 		function fetch_data() {
-			$.ajax({
+			var request = $.ajax({
 				url: '<?php echo site_url("customer_group/fetch_data"); ?>',
 				dataType: 'json',
-				success: function(response) {
-					if (response.length > 0) {
-						for(var i in response) {
-							dataTable.fnAddData([
-								response[i].id,
-								response[i].group_name,
-								response[i].note,
-								'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].id + '"><i class="fa fa-trash"></i>Delete</a>'
-							], false);
-						}
-						dataTable.fnDraw(true);
-					} else {
-
+			});
+			request.done(function(response) {
+				if (response.length > 0) {
+					for(var i in response) {
+						dataTable.fnAddData([
+							response[i].id,
+							response[i].group_name,
+							response[i].note,
+							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].id + '"><i class="fa fa-trash"></i>Delete</a>'
+						], false);
 					}
+					dataTable.fnDraw(true);
+				} else {
+
 				}
 			});
 		}
@@ -191,27 +191,27 @@
 			var jsonStr = [];
 			jsonStr = {"group_name":$('#group_name').val(),
 					   "group_note":$('#group_note').val()};
-			$.ajax({
+			var request = $.ajax({
 				url: '<?php echo site_url("customer_group/save"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
+			});
 
-				success: function(response) {
-					if(response.valid == "Success") {
-						$('#msgDialog > p').html("Data Saved Successfully");
-						//Show new records in the data table
-						dataTable.fnAddData([response.group_id,
-							$('#group_name').val(),
-							$('#group_note').val(),
-							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.group_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.group_id + '"><i class="fa fa-trash"></i>Delete</a>'
-						]);
-						clear_field();
-						$('#addModal').modal('hide');
-						$('#msgModal').modal('show');
-					} else {
-						$('#msgAddValidation > p').html(response.valid);
-					}
+			request.done(function(response) {
+				if(response.valid == "Success") {
+					$('#msgDialog > p').html("Data Saved Successfully");
+					//Show new records in the data table
+					dataTable.fnAddData([response.group_id,
+						$('#group_name').val(),
+						$('#group_note').val(),
+						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.group_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.group_id + '"><i class="fa fa-trash"></i>Delete</a>'
+					]);
+					clear_field();
+					$('#addModal').modal('hide');
+					$('#msgModal').modal('show');
+				} else {
+					$('#msgAddValidation > p').html(response.valid);
 				}
 			});
 		});
@@ -228,20 +228,21 @@
 
 			var jsonStr = [];
 			jsonStr = {"group_id": id};
-			$.ajax({
+			var request = $.ajax({
 				url: '<?php echo site_url("customer_group/fetchById"); ?>',
 				type: 'POST',
 				dataType: 'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
-				success: function(response) {
-					if (response.id.length > 0) {
-						$('#cust_group_id').val(response.id);
-						$('#group_name').val(response.group_name),
-						$('#group_note').val(response.note),
-						$('#addModal').modal('show');
-					} else {
+			});
 
-					}
+			request.done(function(response) {
+				if (response.id.length > 0) {
+					$('#cust_group_id').val(response.id);
+					$('#group_name').val(response.group_name),
+					$('#group_note').val(response.note),
+					$('#addModal').modal('show');
+				} else {
+
 				}
 			});
 		});
@@ -251,27 +252,27 @@
 			jsonStr = {"group_id":$('#cust_group_id').val(),
 					   "group_name":$('#group_name').val(),
 					   "group_note":$('#group_note').val()};
-			$.ajax({
+			var request = $.ajax({
 				url: '<?php echo site_url("customer_group/edit"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
+			});
 
-				success: function(response) {
-					if(response.valid == "Success") {
-						$('#msgDialog > p').html("Data Updated Successfully");
-						//Show new records in the data table
-						dataTable.fnUpdate([response.group_id,
-							$('#group_name').val(),
-							$('#group_note').val(),
-							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.group_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.group_id + '"><i class="fa fa-trash"></i>Delete</a>'
-						], update_position);
-						clear_field();
-						$('#addModal').modal('hide');
-						$('#msgModal').modal('show');
-					} else {
-						$('#msgAddValidation > p').html(response.valid);
-					}
+			request.done(function(response) {
+				if(response.valid == "Success") {
+					$('#msgDialog > p').html("Data Updated Successfully");
+					//Show new records in the data table
+					dataTable.fnUpdate([response.group_id,
+						$('#group_name').val(),
+						$('#group_note').val(),
+						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.group_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.group_id + '"><i class="fa fa-trash"></i>Delete</a>'
+					], update_position);
+					clear_field();
+					$('#addModal').modal('hide');
+					$('#msgModal').modal('show');
+				} else {
+					$('#msgAddValidation > p').html(response.valid);
 				}
 			});
 		});
@@ -289,28 +290,35 @@
 		$('#btnDelete').button().click(function() {
 			var jsonStr = [];
 			jsonStr = {"cust_group_id":$('#cust_group_id').val()};
-			$.ajax({
+			var request = $.ajax({
 				url: '<?php echo site_url("customer_group/delete"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
-				success: function(response) {
+			});
+
+			request.done(function(response) {
+				$('#deleteModal').modal('hide');
+				if(response.valid == 'deleted'){
+					$('[data-id="' + $('#cust_group_id').val() + '"]').parents('tr').fadeOut('slow', function() {
+						cur_tr = this;
+						dataTable.fnDeleteRow(cur_tr);
+					});
+					$('#cust_group_id').val('');
+					$('#msgDialog > p').html('Successfully ' + response.valid);
+					$('#msgModal').modal('show');
+				} else {
+					$('#cust_group_id').val('');
+					$('#msgDialog > p').html(response.valid + ' to delete');
 					$('#deleteModal').modal('hide');
-					if(response.valid == 'deleted'){
-						$('[data-id="' + $('#cust_group_id').val() + '"]').parents('tr').fadeOut('slow', function() {
-							cur_tr = this;
-							dataTable.fnDeleteRow(cur_tr);
-						});
-						$('#cust_group_id').val('');
-						$('#msgDialog > p').html('Successfully ' + response.valid);
-						$('#msgModal').modal('show');
-					} else {
-						$('#cust_group_id').val('');
-						$('#msgDialog > p').html(response.valid + ' to delete');
-						$('#deleteModal').modal('hide');
-						$('#msgModal').modal('show');
-					}
+					$('#msgModal').modal('show');
 				}
+			});
+
+			request.fail(function(response) {
+				$('#msgDialog > p').html('Cannot delete');
+				$('#deleteModal').modal('hide');
+				$('#msgModal').modal('show');
 			});
 		});
 		//----------------------------------------------------------------------
