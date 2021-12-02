@@ -162,26 +162,26 @@ $(document).ready(function() {
 		}
 		//----------------------------------------------------------------------
 		function fetch_data() {
-			$.ajax({
+			var request = $.ajax({
 			url: '<?php echo site_url("product/fetch_data"); ?>',
 				dataType: 'json',
-				success: function(response) {
-					if (response.length > 0) {
-						for(var i in response) {
-							dataTable.fnAddData([
-								response[i].product_id,
-								response[i].product_name,
-								response[i].product_price,
-								response[i].category_name,
-								'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].product_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].product_id + '"><i class="fa fa-trash"></i>Delete</a>'
-								], false);
-							}
-							dataTable.fnDraw(true);
-						} else {
-
+			});
+			request.done(function(response) {
+				if (response.length > 0) {
+					for(var i in response) {
+						dataTable.fnAddData([
+							response[i].product_id,
+							response[i].product_name,
+							response[i].product_price,
+							response[i].category_name,
+							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].product_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].product_id + '"><i class="fa fa-trash"></i>Delete</a>'
+							], false);
 						}
+						dataTable.fnDraw(true);
+					} else {
+
 					}
-				});
+			});
 		}
 		//----------------------------------------------------------------------
 		$('#category_input').autocomplete({
@@ -197,36 +197,36 @@ $(document).ready(function() {
 			jsonStr = {"product_name":$('#product_name').val(),
 				"product_price":$('#product_price').val(),
 				"category_id":$('#category_hidden').val()};
-			$.ajax({
+			var request = $.ajax({
 				url: '<?php echo site_url("product/save"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
-
-				success: function(response) {
-					if(response.valid == "Success") {
-						$('#msgDialog > p').html("Data Saved Successfully");
-						//Show new records in the data table
-						dataTable.fnAddData([response.pr_id,
-							$('#product_name').val(),
-							$('#product_price').val(),
-							$('#category_input').val(),
-							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.pr_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + $('#product_id').val() + '"><i class="fa fa-trash"></i>Delete</a>'
-							]);
-						clear_field();
-						$('#addModal').modal('hide');
-						$('#msgModal').modal('show');
-						// $("#update").button("enable");
-						// $("#btnSubmit").button("disable");
-						} else {
-							// $('#addModal').modal('hide');
-							$('#msgAddValidation > p').html(response.valid);
-							// $('#msgModal').modal('show');
-							// $("#btnSubmit").button("enable");
-							}
-					}
-				});
 			});
+
+			request.done(function(response) {
+				if(response.valid == "Success") {
+					$('#msgDialog > p').html("Data Saved Successfully");
+					//Show new records in the data table
+					dataTable.fnAddData([response.pr_id,
+						$('#product_name').val(),
+						$('#product_price').val(),
+						$('#category_input').val(),
+						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.pr_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + $('#product_id').val() + '"><i class="fa fa-trash"></i>Delete</a>'
+						]);
+					clear_field();
+					$('#addModal').modal('hide');
+					$('#msgModal').modal('show');
+					// $("#update").button("enable");
+					// $("#btnSubmit").button("disable");
+				} else {
+					// $('#addModal').modal('hide');
+					$('#msgAddValidation > p').html(response.valid);
+					// $('#msgModal').modal('show');
+					// $("#btnSubmit").button("enable");
+				}
+			});
+		});
 		//----------------------------------------------------------------------
 		    $('#show_data').on('click','.btn-edit',function(){
 			// get data from button edit
@@ -237,28 +237,25 @@ $(document).ready(function() {
 
 			var jsonStr = [];
 			jsonStr = {"product_id": id};
-			$.ajax({
+			var request = $.ajax({
 			url: '<?php echo site_url("product/fetchById"); ?>',
 				type: 'POST',
 				dataType: 'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
-				success: function(response) {
-					if (response.product_id.length > 0) {
-						$('#product_id').val(response.product_id);
-						$('#product_name').val(response.product_name),
-							$('#product_price').val(response.product_price),
-							$('#category_input').val(response.category_id + '-' + response.category_name),
-							$('#category_hidden').val(response.category_id),
-							$('#addModal').modal('show');
-						} else {
-
-							}
-					}
-				});
-
-				// Call Modal Edit
-				// $('#deleteModal').modal('show');
 			});
+			request.done(function(response) {
+				if (response.product_id.length > 0) {
+					$('#product_id').val(response.product_id);
+					$('#product_name').val(response.product_name),
+						$('#product_price').val(response.product_price),
+						$('#category_input').val(response.category_id + '-' + response.category_name),
+						$('#category_hidden').val(response.category_id),
+						$('#addModal').modal('show');
+				} else {
+
+				}
+			});
+		});
 		//-----------------------------------------------------------------
 		$('#btnEdit').button().click(function() {
 			var jsonStr = [];
@@ -266,13 +263,14 @@ $(document).ready(function() {
 				"product_name":$('#product_name').val(),
 				"product_price":$('#product_price').val(),
 				"category_id":$('#category_hidden').val()};
-			$.ajax({
+			var request = $.ajax({
 			url: '<?php echo site_url("product/edit"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
+			});
 
-				success: function(response) {
+			request.done(function(response) {
 					if(response.valid == "Success") {
 						$('#msgDialog > p').html("Data Updated Successfully");
 						//Show new records in the data table
@@ -287,15 +285,14 @@ $(document).ready(function() {
 						$('#msgModal').modal('show');
 						// $("#update").button("enable");
 						// $("#btnSubmit").button("disable");
-						} else {
-							// $('#addModal').modal('hide');
-							$('#msgAddValidation > p').html(response.valid);
-							// $('#msgModal').modal('show');
-							// $("#btnSubmit").button("enable");
-							}
+					} else {
+						// $('#addModal').modal('hide');
+						$('#msgAddValidation > p').html(response.valid);
+						// $('#msgModal').modal('show');
+						// $("#btnSubmit").button("enable");
 					}
-				});
 			});
+		});
 		//----------------------------------------------------------------------
 	    $('#show_data').on('click','.btn-delete',function(){
 			// get data from button edit
@@ -310,28 +307,28 @@ $(document).ready(function() {
 		$('#btnDelete').button().click(function() {
 			var jsonStr = [];
 			jsonStr = {"product_id":$('#product_id').val()};
-			$.ajax({
+			var request = $.ajax({
 			url: '<?php echo site_url("product/delete"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
-				success: function(response) {
-					$('#deleteModal').modal('hide');
-					if(response.valid == 'deleted'){
-						$('[data-id="' + $('#product_id').val() + '"]').parents('tr').fadeOut('slow', function() {
-							cur_tr = this;
-							dataTable.fnDeleteRow(cur_tr);
-							});
-							$('#msgDialog > p').html('Successfully ' + response.valid);
-							$('#msgModal').modal('show');
-						} else {
-							$('#msgDialog > p').html(response.valid + ' to delete');
-							$('#deleteModal').modal('hide');
-							$('#msgModal').modal('show');
-							}
-					}
-				});
 			});
+			request.done(function(response) {
+				$('#deleteModal').modal('hide');
+				if(response.valid == 'deleted'){
+					$('[data-id="' + $('#product_id').val() + '"]').parents('tr').fadeOut('slow', function() {
+						cur_tr = this;
+						dataTable.fnDeleteRow(cur_tr);
+						});
+						$('#msgDialog > p').html('Successfully ' + response.valid);
+						$('#msgModal').modal('show');
+				} else {
+					$('#msgDialog > p').html(response.valid + ' to delete');
+					$('#deleteModal').modal('hide');
+					$('#msgModal').modal('show');
+				}
+			});
+		});
 		//----------------------------------------------------------------------
 	});
 </script>
