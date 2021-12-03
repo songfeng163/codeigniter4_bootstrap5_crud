@@ -67,11 +67,11 @@
 					<div class="modal-body">
 						<div class="form-group">
 							<label>Group Name</label>
-							<input type="text" class="form-control" name="group_name" id="group_name" placeholder="Group Name">
+							<input type="text" class="form-control" name="cg_name" id="cg_name" placeholder="Group Name">
 						</div>
 						<div class="form-group">
 							<label>Note</label>
-							<input type="text" class="form-control" name="group_note" id="group_note" placeholder="Note">
+							<input type="text" class="form-control" name="cg_note" id="cg_note" placeholder="Note">
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -94,13 +94,13 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete Category</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-               <h4>Are you sure want to delete this group?</h4>
+               <h4>Are you to delete?</h4>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
@@ -114,7 +114,7 @@
 
 	<!-- Field to detect Save/Update State of Add Modal Form  -->
 	<!-- Field to Submit ID for Save/Edit/Delete of the Form -->
-	<input type="hidden" name="cust_group_id" id="cust_group_id">
+	<input type="hidden" name="cg_id" id="cg_id">
 
 	<!-- Include Additional JS Files-->
 	<?php echo view('include_js') ?>
@@ -139,7 +139,7 @@
 		});
 		//----------------------------------------------------------------------
 		$('#addModal').on('shown.bs.modal', function (e) {
-			if($('#cust_group_id').val().length == 0) {
+			if($('#cg_id').val().length == 0) {
 				clear_field();
 				$('#btnEdit').hide();
 				$('#btnSubmit').show();
@@ -158,10 +158,10 @@
 				if (response.length > 0) {
 					for(var i in response) {
 						dataTable.fnAddData([
-							response[i].id,
-							response[i].group_name,
-							response[i].note,
-							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].id + '"><i class="fa fa-trash"></i>Delete</a>'
+							response[i].cg_id,
+							response[i].cg_name,
+							response[i].cg_note,
+							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].cg_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].cg_id + '"><i class="fa fa-trash"></i>Delete</a>'
 						], false);
 					}
 					dataTable.fnDraw(true);
@@ -189,8 +189,10 @@
 		//-----------------------------------------------------------------
 		$('#btnSubmit').button().click(function() {
 			var jsonStr = [];
-			jsonStr = {"group_name":$('#group_name').val(),
-					   "group_note":$('#group_note').val()};
+
+			jsonStr = {"cg_name":$('#cg_name').val(),
+					   "cg_note":$('#cg_note').val()};
+
 			var request = $.ajax({
 				url: '<?php echo site_url("customer_group/save"); ?>',
 				type: 'POST',
@@ -202,10 +204,10 @@
 				if(response.valid == "Success") {
 					$('#msgDialog > p').html("Data Saved Successfully");
 					//Show new records in the data table
-					dataTable.fnAddData([response.group_id,
-						$('#group_name').val(),
-						$('#group_note').val(),
-						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.group_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.group_id + '"><i class="fa fa-trash"></i>Delete</a>'
+					dataTable.fnAddData([response.cg_id,
+						$('#cg_name').val(),
+						$('#cg_note').val(),
+						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.cg_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.cg_id + '"><i class="fa fa-trash"></i>Delete</a>'
 					]);
 					clear_field();
 					$('#addModal').modal('hide');
@@ -224,10 +226,10 @@
 
 			// Set data to Form Edit
 			const id = $(this).data('id');
-			$('#cust_group_id').val(id);
+			$('#cg_id').val(id);
 
 			var jsonStr = [];
-			jsonStr = {"group_id": id};
+			jsonStr = {"cg_id": id};
 			var request = $.ajax({
 				url: '<?php echo site_url("customer_group/fetchById"); ?>',
 				type: 'POST',
@@ -236,10 +238,10 @@
 			});
 
 			request.done(function(response) {
-				if (response.id.length > 0) {
-					$('#cust_group_id').val(response.id);
-					$('#group_name').val(response.group_name),
-					$('#group_note').val(response.note),
+				if (response.cg_id.length > 0) {
+					$('#cg_id').val(response.cg_id);
+					$('#cg_name').val(response.cg_name),
+					$('#cg_note').val(response.cg_note),
 					$('#addModal').modal('show');
 				} else {
 
@@ -249,9 +251,9 @@
 		//-----------------------------------------------------------------
 		$('#btnEdit').button().click(function() {
 			var jsonStr = [];
-			jsonStr = {"group_id":$('#cust_group_id').val(),
-					   "group_name":$('#group_name').val(),
-					   "group_note":$('#group_note').val()};
+			jsonStr = {"cg_id":$('#cg_id').val(),
+					   "cg_name":$('#cg_name').val(),
+					   "cg_note":$('#cg_note').val()};
 			var request = $.ajax({
 				url: '<?php echo site_url("customer_group/edit"); ?>',
 				type: 'POST',
@@ -263,10 +265,10 @@
 				if(response.valid == "Success") {
 					$('#msgDialog > p').html("Data Updated Successfully");
 					//Show new records in the data table
-					dataTable.fnUpdate([response.group_id,
-						$('#group_name').val(),
-						$('#group_note').val(),
-						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.group_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.group_id + '"><i class="fa fa-trash"></i>Delete</a>'
+					dataTable.fnUpdate([response.cg_id,
+						$('#cg_name').val(),
+						$('#cg_note').val(),
+						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.cg_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.cg_id + '"><i class="fa fa-trash"></i>Delete</a>'
 					], update_position);
 					clear_field();
 					$('#addModal').modal('hide');
@@ -281,7 +283,7 @@
 			// get data from button delete
 			const id = $(this).data('id');
 			// Set data to Form Edit
-			$('#cust_group_id').val(id);
+			$('#cg_id').val(id);
 			// Call Modal Edit
 			$('#deleteModal').modal('show');
 		});
@@ -289,7 +291,7 @@
 		//----------------------------------------------------------------------
 		$('#btnDelete').button().click(function() {
 			var jsonStr = [];
-			jsonStr = {"cust_group_id":$('#cust_group_id').val()};
+			jsonStr = {"cg_id":$('#cg_id').val()};
 			var request = $.ajax({
 				url: '<?php echo site_url("customer_group/delete"); ?>',
 				type: 'POST',
@@ -300,15 +302,15 @@
 			request.done(function(response) {
 				$('#deleteModal').modal('hide');
 				if(response.valid == 'deleted'){
-					$('[data-id="' + $('#cust_group_id').val() + '"]').parents('tr').fadeOut('slow', function() {
+					$('[data-id="' + $('#cg_id').val() + '"]').parents('tr').fadeOut('slow', function() {
 						cur_tr = this;
 						dataTable.fnDeleteRow(cur_tr);
 					});
-					$('#cust_group_id').val('');
+					$('#cg_id').val('');
 					$('#msgDialog > p').html('Successfully ' + response.valid);
 					$('#msgModal').modal('show');
 				} else {
-					$('#cust_group_id').val('');
+					$('#cg_id').val('');
 					$('#msgDialog > p').html(response.valid + ' to delete');
 					$('#deleteModal').modal('hide');
 					$('#msgModal').modal('show');
@@ -316,7 +318,7 @@
 			});
 
 			request.fail(function(response) {
-				$('#msgDialog > p').html('Cannot delete');
+				$('#msgDialog > p').html('Cannot be deleted');
 				$('#deleteModal').modal('hide');
 				$('#msgModal').modal('show');
 			});

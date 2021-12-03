@@ -62,6 +62,6 @@ class Login extends BaseController
 	//-------------------------------------------------------
 
 	public function load_dash_board() {
-			echo view('dash_board');
+			parent::loadView('dash_board');
 	}
 }

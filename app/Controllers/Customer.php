@@ -11,18 +11,17 @@ class Customer extends BaseController {
 		if(!session()->get('isLoggedIn')) {
 			return redirect()->to('/login');
 		} else {
-
-			echo view('customer');
+			parent::loadView('customer');
 		}
 	}
 	//--------------------------------------------------------------------------
     function get_customer_group() {
 		$db = db_connect();
         if (isset($_REQUEST['query'])) {
-            $sql = "SELECT id as data, concat(id, '-', group_name) as value FROM tbl_customer_group WHERE id LIKE '%" . $_REQUEST['query'] . "%' OR group_name LIKE '%" . $_REQUEST['query'] . "%'";
+            $sql = "SELECT cg_id as data, cg_name as value FROM tbl_customer_group WHERE cg_id LIKE '%" . $_REQUEST['query'] . "%' OR cg_name LIKE '%" . $_REQUEST['query'] . "%'";
             $query = $db->query($sql);
         } else {
-            $sql = "SELECT category_id as id, concat(id, '-', group_name) as name FROM tbl_customer";
+            $sql = "SELECT cg_id as id, cg_name as name FROM tbl_customer";
             $query = $db->query($sql);
         }
 
@@ -39,9 +38,9 @@ class Customer extends BaseController {
 		$obj = json_decode($this->request->getPost('jsarray'));
 		$db  = \Config\Database::connect();
 		$builder = $db->table('tbl_customer');
-		$builder->select('tbl_customer.id, customer_name, father_name, mother_name, national_id_card_no, present_address, mobile, email_address, credit_limit, tbl_customer.group_id, tbl_customer_group.group_name, tbl_customer.note');
-		$builder->join('tbl_customer_group', 'tbl_customer.group_id = tbl_customer_group.id', 'inner');
-		$builder->where('tbl_customer.id', $obj->customer_id);
+		$builder->select('*');
+		$builder->join('tbl_customer_group', 'cg_id = cust_group_id', 'left');
+		$builder->where('tbl_customer.cust_id', $obj->cust_id);
 		$query = $builder->get();
 		echo json_encode($query->getRow());
 	}
@@ -49,8 +48,8 @@ class Customer extends BaseController {
 	public function fetch_data() {
 		$db      = \Config\Database::connect();
 		$builder = $db->table('tbl_customer');
-		$builder->select('tbl_customer.id, customer_name, present_address, mobile,  tbl_customer.note');
-		$builder->join('tbl_customer_group', 'tbl_customer.group_id = tbl_customer_group.id', 'inner');
+		$builder->select('*');
+		$builder->join('tbl_customer_group', 'cg_id = cust_id', 'left');
 		$query = $builder->get();
 		echo json_encode($query->getResult());
 	}
@@ -58,11 +57,11 @@ class Customer extends BaseController {
 	public function get_new_id() {
 		$db      = \Config\Database::connect();
 		$builder = $db->table('tbl_customer');
-		$builder->selectMax('id');
+		$builder->selectMax('cust_id');
 		$query = $builder->get();
         if ($query->getNumRows() > 0) {
             $row = $query->getRow();
-            $max_id = substr($row->id, 1);
+            $max_id = substr($row->cust_id, 1);
             $new_id = $max_id + 1;
             if ($new_id < 10) {
                 $new_id = "C00000" . $new_id;
@@ -87,30 +86,38 @@ class Customer extends BaseController {
 		$validation =  \Config\Services::validation();
 
 		$rules  = [
-			'customer_name'  =>  'required|min_length[2]|max_length[100]',
-			'present_address'  =>  'required|min_length[2]|max_length[100]',
-			'mobile'  =>  'required|min_length[2]|max_length[100]',
-			'group_id'  =>  'required|is_not_unique[tbl_customer_group.id]',
+			'cust_name'  =>  'required|min_length[2]|max_length[100]',
+			'cust_pr_address'  =>  'required|min_length[2]|max_length[100]',
+			'cust_mobile'  =>  'required|min_length[2]|max_length[100]',
+			'cust_group_id'  =>  'required|is_not_unique[tbl_customer_group.cg_id]',
+			'cust_credit_limit'  =>  'permit_empty|numeric',
 		];
 
 		$messages = [
-				'customer_name' => [
+			'cust_name' => [
 				'required' => 'Name is required.',
 				'min_length' => 'Minimum 2 characters.',
 				'max_length' => 'Maximum 100 characters.',
 			],
-				'present_address' => [
+			'cust_pr_address' => [
 				'required' => 'Address is required.',
 				'min_length' => 'Minimum 2 characters.',
 				'max_length' => 'Maximum 100 characters.',
 			],
-				'mobile' => [
-				'required' => 'Mobile name is required.',
+			'cust_mobile' => [
+				'required' => 'Mobile No is required.',
 				'min_length' => 'Minimum 2 characters.',
 				'max_length' => 'Maximum 100 characters.',
 			],
+			'cust_group_id' => [
+				'required' => 'Group is required.',
+				'min_length' => 'Minimum 2 characters.',
+				'max_length' => 'Maximum 100 characters.',
+			],
+			'cust_credit_limit' => [
+				'numeric' => 'Credit Limit Must be Number',
+			],
 		];
-
 		return $validation->setRules($rules, $messages);
 	}
 	//--------------------------------------------------------------------------
@@ -119,17 +126,17 @@ class Customer extends BaseController {
 		$new_id = $this->get_new_id();
 
 		$data = array(
-			'id'=> $new_id,
-			'customer_name'=> $obj->cust_name,
-			'father_name'=> $obj->father_name,
-			'mother_name'=> $obj->mother_name,
-			'national_id_card_no'=> $obj->nid_no,
-			'present_address'=> $obj->present_address,
-			'mobile'=> $obj->mobile_no,
-			'email_address'=> $obj->email_add,
-			'credit_limit'=> $obj->credit_limit,
-			'group_id'=> $obj->cust_group_id,
-			'note'=> $obj->cust_note,
+			'cust_id'=> $new_id,
+			'cust_name'=> $obj->cust_name,
+			'cust_father_name'=> $obj->cust_father_name,
+			'cust_mother_name'=> $obj->cust_mother_name,
+			'cust_nid_no'=> $obj->cust_nid_no,
+			'cust_pr_address'=> $obj->cust_pr_address,
+			'cust_mobile'=> $obj->cust_mobile,
+			'cust_email'=> $obj->cust_email,
+			'cust_credit_limit'=> $obj->cust_credit_limit,
+			'cust_group_id'=> $obj->cust_group_id,
+			'cust_note'=> $obj->cust_note,
 		);
 
 		$db      = \Config\Database::connect();
@@ -139,7 +146,7 @@ class Customer extends BaseController {
 
 		if ($validation->run($data)) {
 			$builder->insert($data);
-			$msg_validation['customer_id'] = $new_id;
+			$msg_validation['cust_id'] = $new_id;
 			$msg_validation['valid'] = 'Success';
 
 		} else {
@@ -153,17 +160,17 @@ class Customer extends BaseController {
 		$obj = json_decode($this->request->getPost('jsarray'));
 
 		$data = array (
-			'id'=> $obj->customer_id,
-			'customer_name'=> $obj->cust_name,
-			'father_name'=> $obj->father_name,
-			'mother_name'=> $obj->mother_name,
-			'national_id_card_no'=> $obj->nid_no,
-			'present_address'=> $obj->present_address,
-			'mobile'=> $obj->mobile_no,
-			'email_address'=> $obj->email_add,
-			'credit_limit'=> $obj->credit_limit,
-			'group_id'=> $obj->cust_group_id,
-			'note'=> $obj->cust_note,
+			'cust_id'=> $obj->cust_id,
+			'cust_name'=> $obj->cust_name,
+			'cust_father_name'=> $obj->cust_father_name,
+			'cust_mother_name'=> $obj->cust_mother_name,
+			'cust_nid_no'=> $obj->cust_nid_no,
+			'cust_pr_address'=> $obj->cust_pr_address,
+			'cust_mobile'=> $obj->cust_mobile,
+			'cust_email'=> $obj->cust_email,
+			'cust_credit_limit'=> $obj->cust_credit_limit,
+			'cust_group_id'=> $obj->cust_group_id,
+			'cust_note'=> $obj->cust_note,
 		);
 
 		$db      = \Config\Database::connect();
@@ -172,9 +179,9 @@ class Customer extends BaseController {
 		$validation = $this->validate_data();
 
 		if ($validation->run($data)) {
-			$builder->where('id', $obj->customer_id);
+			$builder->where('cust_id', $obj->cust_id);
 			$builder->update($data);
-			$msg_validation['customer_id'] = $obj->customer_id;
+			$msg_validation['cust_id'] = $obj->cust_id;
 			$msg_validation['valid'] = 'Success';
 
 		} else {
@@ -186,9 +193,11 @@ class Customer extends BaseController {
 	//--------------------------------------------------------------------------
 	public function delete() {
 		$obj = json_decode($this->request->getPost('jsarray'));
+
 		$db      = \Config\Database::connect();
 		$builder = $db->table('tbl_customer');
-		$builder->where('id', $obj->customer_id);
+		$builder->where('cust_id', $obj->cust_id);
+
 		if($builder->delete()) {
 			$msg_validation['valid'] = 'deleted';
 			echo json_encode($msg_validation);

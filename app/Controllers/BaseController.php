@@ -50,4 +50,9 @@ class BaseController extends Controller
 
         // E.g.: $this->session = \Config\Services::session();
     }
+
+	public function loadView($view_name) {
+		echo view($view_name);
+		echo view('main_side_bar');
+	}
 }

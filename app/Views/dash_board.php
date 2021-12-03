@@ -12,9 +12,7 @@
 			}
 		</style>
 	</head>
-    <!-- <body class="bg&#45;primary bg&#45;gradient"> -->
     <body class="">
-		<?php echo view('main_side_bar'); ?>
 		<div id="layoutSidenav_content">
 			<main>
 					<div class="container-fluid col-md-12 col-sm-12 col-lg-11 ">

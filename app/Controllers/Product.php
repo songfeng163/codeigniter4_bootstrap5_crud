@@ -5,26 +5,25 @@ use CodeIgniter\Controller;
 use App\Models\Product_model;
 
 class Product extends BaseController {
-// if user not logged in
+	// if user not logged in
 
-        //--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
 	public function index() {
 		// echo view('main_side_bar');
-                if(!session()->get('isLoggedIn')) {
-                   return redirect()->to('/login');
-                } else {
-
-                    echo view('product');
-                }
+		if(!session()->get('isLoggedIn')) {
+			return redirect()->to('/login');
+		} else {
+			parent::loadView('product');
+		}
 
 	}
 
 	//--------------------------------------------------------------------------
 	public function fetch_data() {
 		$db      = \Config\Database::connect();
-		$builder = $db->table('product');
+		$builder = $db->table('tbl_product');
 		$builder->select('*');
-		$builder->join('category', 'category_id = product_category_id', 'left');
+		$builder->join('tbl_product_category', 'pc_id = prod_pc_id', 'left');
 		$query = $builder->get();
 		echo json_encode($query->getResult());
 	}
@@ -32,21 +31,49 @@ class Product extends BaseController {
 	public function fetchById() {
 		$obj = json_decode($this->request->getPost('jsarray'));
 		$db      = \Config\Database::connect();
-		$builder = $db->table('product');
-		$builder->select('*');
-		$builder->join('category', 'category_id = product_category_id', 'left');
-		$builder->where('product_id', $obj->product_id);
+		$builder = $db->table('tbl_product');
+		$builder->select('tbl_product.*, tbl_product_category.pc_name');
+		$builder->join('tbl_product_category', 'pc_id = prod_pc_id', 'left');
+		$builder->where('prod_id', $obj->prod_id);
 		$query = $builder->get();
 		echo json_encode($query->getRow());
+	}
+	//--------------------------------------------------------------------------
+	public function get_new_id() {
+		$db      = \Config\Database::connect();
+		$builder = $db->table('tbl_product');
+		$builder->selectMax('prod_id');
+		$query = $builder->get();
+        if ($query->getNumRows() > 0) {
+            $row = $query->getRow();
+            $max_id = substr($row->prod_id, 1);
+            $new_id = $max_id + 1;
+            if ($new_id < 10) {
+                $new_id = "P00000" . $new_id;
+            } elseif ($new_id < 100) {
+                $new_id = "P0000" . $new_id;
+            } elseif ($new_id < 1000) {
+                $new_id = "P000" . $new_id;
+            } elseif ($new_id < 10000) {
+                $new_id = "P00" . $new_id;
+            } elseif ($new_id < 100000) {
+                $new_id = "P0" . $new_id;
+            } else {
+                $new_id = "P" . $new_id;
+            }
+            return $new_id;
+		} else {
+			return "P000001";
+		}
 	}
 	//--------------------------------------------------------------------------
 	public function validate_data() {
 		$validation =  \Config\Services::validation();
 
 		$rules  = [
-			'product_name'  =>  'required|min_length[2]|max_length[100]',
-			'product_price' =>  'required|decimal',
-			'product_category_id' =>  'required'
+			'prod_name'  =>  'required|min_length[2]|max_length[100]',
+			'prod_price' =>  'required|decimal',
+			'prod_pc_id' =>  'required|is_not_unique[tbl_product_category.pc_id]'
 		];
 
 		$messages = [
@@ -62,21 +89,24 @@ class Product extends BaseController {
 	//--------------------------------------------------------------------------
 	public function save() {
 		$obj = json_decode($this->request->getPost('jsarray'));
+		$new_id = $this->get_new_id();
 
 		$data = array(
-			'product_name'			=> $obj->product_name,
-			'product_price'			=> $obj->product_price,
-			'product_category_id'	=> $obj->category_id,
+			'prod_id' => $new_id,
+			'prod_name' => $obj->prod_name,
+			'prod_price' => $obj->prod_price,
+			'prod_pc_id' => $obj->prod_pc_id,
+			'prod_note'	=> $obj->prod_note,
 		);
 
 		$db      = \Config\Database::connect();
-		$builder = $db->table('product');
+		$builder = $db->table('tbl_product');
 
 		$validation = $this->validate_data();
 
 		if ($validation->run($data)) {
 			$builder->insert($data);
-			$msg_validation['pr_id'] = $db->insertID();
+			$msg_validation['prod_id'] = $new_id;
 			$msg_validation['valid'] = 'Success';
 
 		} else {
@@ -90,21 +120,22 @@ class Product extends BaseController {
 		$obj = json_decode($this->request->getPost('jsarray'));
 
 		$data = array(
-			'product_id'			=> $obj->product_id,
-			'product_name'			=> $obj->product_name,
-			'product_price'			=> $obj->product_price,
-			'product_category_id'	=> $obj->category_id,
+			'prod_id' => $obj->prod_id,
+			'prod_name' => $obj->prod_name,
+			'prod_price' => $obj->prod_price,
+			'prod_pc_id' => $obj->prod_pc_id,
+			'prod_note'	=> $obj->prod_note,
 		);
 
 		$db      = \Config\Database::connect();
-		$builder = $db->table('product');
+		$builder = $db->table('tbl_product');
 
 		$validation = $this->validate_data();
 
 		if ($validation->run($data)) {
-			$builder->where('product_id', $obj->product_id);
+			$builder->where('prod_id', $obj->prod_id);
 			$builder->update($data);
-			$msg_validation['pr_id'] = $obj->product_id;
+			$msg_validation['prod_id'] = $obj->prod_id;
 			$msg_validation['valid'] = 'Success';
 
 		} else {
@@ -115,42 +146,30 @@ class Product extends BaseController {
 	}
 
 	//--------------------------------------------------------------------------
-    function get_category() {
+	function get_category() {
 		$db = db_connect();
-        if (isset($_REQUEST['query'])) {
-            $sql = "SELECT category_id as data, concat(category_id, '-', category_name) as value FROM category WHERE category_id LIKE '%" . $_REQUEST['query'] . "%' OR category_name LIKE '%" . $_REQUEST['query'] . "%'";
-            $query = $db->query($sql);
-        } else {
-            $sql = "SELECT category_id as id, concat(category_id, '-', category_name) as name FROM category";
-            $query = $db->query($sql);
-        }
+		if (isset($_REQUEST['query'])) {
+			$sql = "SELECT pc_id as data, pc_name as value FROM tbl_product_category WHERE pc_id LIKE '%" . $_REQUEST['query'] . "%' OR pc_name LIKE '%" . $_REQUEST['query'] . "%'";
+			$query = $db->query($sql);
+		} else {
+			$sql = "SELECT pc_id as id, concat(pc_id, '-', pc_name) as name FROM tbl_product_category";
+			$query = $db->query($sql);
+		}
 
-        if ($query->getNumRows() > 0) {
-            $result = json_encode($query->getResult('array'));
-            $result = '{"query": "'. $_REQUEST['query'] . '", "suggestions":' . $result . '}';
-            echo $result;
-        } else {
-            echo json_encode(array());
-        }
-    }
-
-	//--------------------------------------------------------------------------
-	public function update() {
-		$model = new Product_model();
-		$id = $this->request->getPost('product_id');
-		$data = array(
-			'product_name'					=> $this->request->getPost('product_name'),
-			'product_price'					=> $this->request->getPost('product_price'),
-			'product_category_id'			=> $this->request->getPost('product_catetory'),
-		);
+		if ($query->getNumRows() > 0) {
+			$result = json_encode($query->getResult('array'));
+			$result = '{"query": "'. $_REQUEST['query'] . '", "suggestions":' . $result . '}';
+			echo $result;
+		} else {
+			echo json_encode(array());
+		}
 	}
-
 	//--------------------------------------------------------------------------
 	public function delete() {
 		$obj = json_decode($this->request->getPost('jsarray'));
 		$db      = \Config\Database::connect();
-		$builder = $db->table('product');
-		$builder->where('product_id', $obj->product_id);
+		$builder = $db->table('tbl_product');
+		$builder->where('prod_id', $obj->prod_id);
 		if($builder->delete()) {
 			$msg_validation['valid'] = 'deleted';
 			echo json_encode($msg_validation);
@@ -160,11 +179,6 @@ class Product extends BaseController {
 			$msg_validation['valid'] = 'failed';
 			echo json_encode($msg_validation);
 		}
-
-		// $model = new Product_model();
-		// $id = $this->request->getPost('product_id');
-		// $model->deleteProduct($id);
-		// return redirect()->to('/product');
 	}
 	//--------------------------------------------------------------------------
 }

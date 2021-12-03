@@ -13,9 +13,6 @@
 	</head>
 
 	<body class="bg-white">
-
-		<?php echo view('main_side_bar'); ?>
-
 		<div id="layoutSidenav_content">
 			<div class="container col-md-9 col-sm-9 col-lg-10">
 				<div class="pt-5"> </div>
@@ -78,35 +75,35 @@
 						</div>
 						<div class="col-md-6">
 							<label>Father</label>
-							<input type="text" class="form-control" name="father_name" id="father_name" placeholder="Father Name">
+							<input type="text" class="form-control" name="cust_father_name" id="cust_father_name" placeholder="Father Name">
 						</div>
 						<div class="col-md-6">
 							<label>Mother</label>
-							<input type="text" class="form-control" name="mother_name" id="mother_name" placeholder="Mother Name">
+							<input type="text" class="form-control" name="cust_mother_name" id="cust_mother_name" placeholder="Mother Name">
 						</div>
 						<div class="col-md-6">
 							<label>NID No</label>
-							<input type="text" class="form-control" name="nid_no" id="nid_no" placeholder="NID No">
+							<input type="text" class="form-control" name="cust_nid_no" id="cust_nid_no" placeholder="NID No">
 						</div>
 						<div class="col-md-6">
 							<label>Address</label>
-							<input type="text" class="form-control" name="present_address" id="present_address" placeholder="Present Address">
+							<input type="text" class="form-control" name="cust_pr_address" id="cust_pr_address" placeholder="Present Address">
 						</div>
 						<div class="col-md-6">
 							<label>Mobile</label>
-							<input type="text" class="form-control" name="mobile_no" id="mobile_no" placeholder="Mobile No">
+							<input type="text" class="form-control" name="cust_mobile" id="cust_mobile" placeholder="Mobile No">
 						</div>
 						<div class="col-md-6">
 							<label>Email</label>
-							<input type="text" class="form-control" name="email_add" id="email_add" placeholder="Email">
+							<input type="text" class="form-control" name="cust_email" id="cust_email" placeholder="Email">
 						</div>
 						<div class="col-md-6">
 							<label>Credit Limit</label>
-							<input type="text" class="form-control" name="credit_limit" id="credit_limit" placeholder="Credit Limit">
+							<input type="text" class="form-control" name="cust_credit_limit" id="cust_credit_limit" placeholder="Credit Limit">
 						</div>
 						<div class="col-md-6">
 							<label>Group</label>
-							<input type="text" id="cust_group_input">
+							<input type="text" id="cust_group_id_input">
 						</div>
 						<div class="col-md-6">
 							<label>Note</label>
@@ -120,7 +117,7 @@
 
 					<!-- To Show Validation Message to the User -->
 					<div id="msgAddValidation"><p></p></div>
-					<input type="hidden" id="cust_group_hidden"></div>
+					<input type="hidden" id="cust_group_id_hidden"></div>
 				</div>
 			</div>
 		</div>
@@ -154,7 +151,7 @@
 
 	<!-- Field to detect Save/Update State of Add Modal Form  -->
 	<!-- Field to Submit ID for Save/Edit/Delete of the Form -->
-	<input type="hidden" name="customer_id" id="customer_id">
+	<input type="hidden" name="cust_id" id="cust_id">
 
 	<!-- Include Additional JS Files-->
 	<?php echo view('include_js') ?>
@@ -179,7 +176,7 @@
 		});
 		//----------------------------------------------------------------------
 		$('#addModal').on('shown.bs.modal', function (e) {
-			if($('#customer_id').val().length == 0) {
+			if($('#cust_id').val().length == 0) {
 				clear_field();
 				$('#btnEdit').hide();
 				$('#btnSubmit').show();
@@ -189,11 +186,11 @@
 			}
 		});
 		//----------------------------------------------------------------------
-		$('#cust_group_input').autocomplete({
+		$('#cust_group_id_input').autocomplete({
 			serviceUrl: '<?php echo site_url("customer/get_customer_group"); ?>',
 			onSelect:function (suggestion) {
 				// alert('You selected: ' + suggestion.value +', ' + suggestion.data);
-				$('#cust_group_hidden').val(suggestion.data);
+				$('#cust_group_id_hidden').val(suggestion.data);
 			}
 		});
 		//----------------------------------------------------------------------
@@ -207,12 +204,12 @@
 				if (response.length > 0) {
 					for(var i in response) {
 						dataTable.fnAddData([
-							response[i].id,
-							response[i].customer_name,
-							response[i].present_address,
-							response[i].mobile,
-							response[i].note,
-							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].id + '"><i class="fa fa-trash"></i>Delete</a>'
+							response[i].cust_id,
+							response[i].cust_name,
+							response[i].cust_pr_address,
+							response[i].cust_mobile,
+							response[i].cust_note,
+							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].cust_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].cust_id + '"><i class="fa fa-trash"></i>Delete</a>'
 						], false);
 					}
 					dataTable.fnDraw(true);
@@ -243,14 +240,14 @@
 		$('#btnSubmit').button().click(function() {
 			var jsonStr = [];
 			jsonStr = {"cust_name":$('#cust_name').val(),
-					   "father_name":$('#father_name').val(),
-					   "mother_name":$('#mother_name').val(),
-					   "nid_no":$('#nid_no').val(),
-					   "present_address":$('#present_address').val(),
-					   "mobile_no":$('#mobile_no').val(),
-					   "email_add":$('#email_add').val(),
-					   "credit_limit":$('#credit_limit').val(),
-					   "cust_group_id":$('#cust_group_hidden').val(),
+					   "cust_father_name":$('#cust_father_name').val(),
+					   "cust_mother_name":$('#cust_mother_name').val(),
+					   "cust_nid_no":$('#cust_nid_no').val(),
+					   "cust_pr_address":$('#cust_pr_address').val(),
+					   "cust_mobile":$('#cust_mobile').val(),
+					   "cust_email":$('#cust_email').val(),
+					   "cust_credit_limit":$('#cust_credit_limit').val(),
+					   "cust_group_id":$('#cust_group_id_hidden').val(),
 					   "cust_note":$('#cust_note').val()};
 
 			var request = $.ajax({
@@ -264,12 +261,12 @@
 				if(response.valid == "Success") {
 					$('#msgDialog > p').html("Data Saved Successfully");
 					//Show new records in the data table
-					dataTable.fnAddData([response.customer_id,
+					dataTable.fnAddData([response.cust_id,
 						$('#cust_name').val(),
-						$('#present_address').val(),
-						$('#mobile_no').val(),
+						$('#cust_pr_address').val(),
+						$('#cust_mobile').val(),
 						$('#cust_note').val(),
-						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.customer_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.customer_id + '"><i class="fa fa-trash"></i>Delete</a>'
+						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.cust_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.cust_id + '"><i class="fa fa-trash"></i>Delete</a>'
 					]);
 					clear_field();
 					$('#addModal').modal('hide');
@@ -288,10 +285,10 @@
 
 			// Set data to Form Edit
 			const id = $(this).data('id');
-			$('#customer_id').val(id);
+			$('#cust_id').val(id);
 
 			var jsonStr = [];
-			jsonStr = {"customer_id": id};
+			jsonStr = {"cust_id": id};
 			var request = $.ajax({
 				url: '<?php echo site_url("customer/fetchById"); ?>',
 				type: 'POST',
@@ -299,19 +296,19 @@
 				data: {'jsarray': $.toJSON(jsonStr)},
 			});
 			request.done(function(response) {
-				if (response.id.length > 0) {
-					$('#customer_id').val(response.id);
-					$('#cust_name').val(response.customer_name),
-					$('#father_name').val(response.father_name),
-					$('#mother_name').val(response.mother_name),
-					$('#nid_no').val(response.national_id_card_no),
-					$('#present_address').val(response.present_address),
-					$('#mobile_no').val(response.mobile),
-					$('#email_add').val(response.email_address),
-					$('#credit_limit').val(response.credit_limit),
-					$('#cust_group_input').val(response.group_id + '-' + response.group_name),
-					$('#cust_group_hidden').val(response.group_id),
-					$('#cust_note').val(response.note),
+				if (response.cust_id.length > 0) {
+					$('#cust_id').val(response.cust_id);
+					$('#cust_name').val(response.cust_name),
+					$('#cust_father_name').val(response.cust_father_name),
+					$('#cust_mother_name').val(response.cust_mother_name),
+					$('#cust_nid_no').val(response.cust_nid_no),
+					$('#cust_pr_address').val(response.cust_pr_address),
+					$('#cust_mobile').val(response.cust_mobile),
+					$('#cust_email').val(response.cust_email),
+					$('#cust_credit_limit').val(response.cust_credit_limit),
+					$('#cust_group_id_input').val(response.cg_name),
+					$('#cust_group_id_hidden').val(response.cust_group_id),
+					$('#cust_note').val(response.cust_note),
 					$('#addModal').modal('show');
 				} else {
 
@@ -321,16 +318,16 @@
 		//-----------------------------------------------------------------
 		$('#btnEdit').button().click(function() {
 			var jsonStr = [];
-			jsonStr = {"customer_id":$('#customer_id').val(),
+			jsonStr = {"cust_id":$('#cust_id').val(),
 					   "cust_name":$('#cust_name').val(),
-					   "father_name":$('#father_name').val(),
-					   "mother_name":$('#mother_name').val(),
-					   "nid_no":$('#nid_no').val(),
-					   "present_address":$('#present_address').val(),
-					   "mobile_no":$('#mobile_no').val(),
-					   "email_add":$('#email_add').val(),
-					   "credit_limit":$('#credit_limit').val(),
-					   "cust_group_id":$('#cust_group_hidden').val(),
+					   "cust_father_name":$('#cust_father_name').val(),
+					   "cust_mother_name":$('#cust_mother_name').val(),
+					   "cust_nid_no":$('#cust_nid_no').val(),
+					   "cust_pr_address":$('#cust_pr_address').val(),
+					   "cust_mobile":$('#cust_mobile').val(),
+					   "cust_email":$('#cust_email').val(),
+					   "cust_credit_limit":$('#cust_credit_limit').val(),
+					   "cust_group_id":$('#cust_group_id_hidden').val(),
 					   "cust_note":$('#cust_note').val()};
 			var request = $.ajax({
 				url: '<?php echo site_url("customer/edit"); ?>',
@@ -343,12 +340,12 @@
 				if(response.valid == "Success") {
 					$('#msgDialog > p').html("Data Updated Successfully");
 					//Show new records in the data table
-					dataTable.fnUpdate([response.customer_id,
+					dataTable.fnUpdate([response.cust_id,
 						$('#cust_name').val(),
-						$('#present_address').val(),
-						$('#mobile_no').val(),
+						$('#cust_pr_address').val(),
+						$('#cust_mobile').val(),
 						$('#cust_note').val(),
-						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.customer_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.customer_id + '"><i class="fa fa-trash"></i>Delete</a>'
+						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.cust_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.cust_id + '"><i class="fa fa-trash"></i>Delete</a>'
 					], update_position);
 					clear_field();
 					$('#addModal').modal('hide');
@@ -363,7 +360,7 @@
 			// get data from button delete
 			const id = $(this).data('id');
 			// Set data to Form Edit
-			$('#customer_id').val(id);
+			$('#cust_id').val(id);
 			// Call Modal Edit
 			$('#deleteModal').modal('show');
 		});
@@ -371,7 +368,7 @@
 		//----------------------------------------------------------------------
 		$('#btnDelete').button().click(function() {
 			var jsonStr = [];
-			jsonStr = {"customer_id":$('#customer_id').val()};
+			jsonStr = {"cust_id":$('#cust_id').val()};
 			var request = $.ajax({
 				url: '<?php echo site_url("customer/delete"); ?>',
 				type: 'POST',
@@ -381,19 +378,25 @@
 			request.done(function(response) {
 				$('#deleteModal').modal('hide');
 				if(response.valid == 'deleted'){
-					$('[data-id="' + $('#customer_id').val() + '"]').parents('tr').fadeOut('slow', function() {
+					$('[data-id="' + $('#cust_id').val() + '"]').parents('tr').fadeOut('slow', function() {
 						cur_tr = this;
 						dataTable.fnDeleteRow(cur_tr);
 					});
-					$('#customer_id').val('');
+					$('#cust_id').val('');
 					$('#msgDialog > p').html('Successfully ' + response.valid);
 					$('#msgModal').modal('show');
 				} else {
-					$('#customer_id').val('');
+					$('#cust_id').val('');
 					$('#msgDialog > p').html(response.valid + ' to delete');
 					$('#deleteModal').modal('hide');
 					$('#msgModal').modal('show');
 				}
+			});
+
+			request.fail(function(response) {
+				$('#msgDialog > p').html('Cannot be deleted');
+				$('#deleteModal').modal('hide');
+				$('#msgModal').modal('show');
 			});
 		});
 		//----------------------------------------------------------------------
