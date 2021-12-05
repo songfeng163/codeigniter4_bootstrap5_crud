@@ -76,24 +76,24 @@ class Customer_model extends Model {
 
 		$query = $builder->get();
 
-        if ($query->getNumRows() > 0) {
-            $row = $query->getRow();
-            $max_id = substr($row->cust_id, 1);
-            $new_id = $max_id + 1;
-            if ($new_id < 10) {
-                $new_id = "C00000" . $new_id;
-            } elseif ($new_id < 100) {
-                $new_id = "C0000" . $new_id;
-            } elseif ($new_id < 1000) {
-                $new_id = "C000" . $new_id;
-            } elseif ($new_id < 10000) {
-                $new_id = "C00" . $new_id;
-            } elseif ($new_id < 100000) {
-                $new_id = "C0" . $new_id;
-            } else {
-                $new_id = "C" . $new_id;
-            }
-            return $new_id;
+		if ($query->getNumRows() > 0) {
+			$row = $query->getRow();
+			$max_id = substr($row->cust_id, 1);
+			$new_id = $max_id + 1;
+			if ($new_id < 10) {
+				$new_id = "C00000" . $new_id;
+			} elseif ($new_id < 100) {
+				$new_id = "C0000" . $new_id;
+			} elseif ($new_id < 1000) {
+				$new_id = "C000" . $new_id;
+			} elseif ($new_id < 10000) {
+				$new_id = "C00" . $new_id;
+			} elseif ($new_id < 100000) {
+				$new_id = "C0" . $new_id;
+			} else {
+				$new_id = "C" . $new_id;
+			}
+			return $new_id;
 		} else {
 			return "C000001";
 		}

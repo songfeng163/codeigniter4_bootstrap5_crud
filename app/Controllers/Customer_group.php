@@ -66,7 +66,7 @@ class Customer_group extends BaseController {
 
         if ($validation->run($data)) {
             
-            $model->insert($data);
+            $qry = $model->insert($data);
             
             $msg_validation['cg_id'] = $new_id;
             $msg_validation['valid'] = 'Success';

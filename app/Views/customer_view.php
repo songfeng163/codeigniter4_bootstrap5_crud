@@ -254,7 +254,7 @@ $(document).ready(function() {
 						$('#addModal').modal('hide');
 						$('#msgModal').modal('show');
 					} else {
-							var txt_error = "";
+						var txt_error = "";
 						if (Object.keys(response.valid).length > 0) {
 							var arr_msg = Object.values(response.valid);
 							for(var i in arr_msg) {
@@ -340,8 +340,15 @@ $(document).ready(function() {
 						$('#addModal').modal('hide');
 						$('#msgModal').modal('show');
 						} else {
-							$('#msgAddValidation > p').html(response.valid);
-							}
+							var txt_error = "";
+                                                        if (Object.keys(response.valid).length > 0) {
+                                                                var arr_msg = Object.values(response.valid);
+                                                                for(var i in arr_msg) {
+                                                                       txt_error = txt_error + arr_msg[i];
+                                                                }
+                                                        }
+                                                        $('#msgAddValidation > p').html(txt_error);
+						}
 					});
 			});
 		//----------------------------------------------------------------------

@@ -17,18 +17,18 @@ class Customer extends BaseController {
 		}
 	}
 	//--------------------------------------------------------------------------
-    function get_customer_group() {
+	function get_customer_group() {
 		$model = new Customer_group_model();
 		$query = $model->findCustGroupByIdOrName($_REQUEST['query']);
 
-        if ($query->getNumRows() > 0) {
-            $result = json_encode($query->getResult('array'));
-            $result = '{"query": "'. $_REQUEST['query'] . '", "suggestions":' . $result . '}';
-            echo $result;
-        } else {
-            echo json_encode(array());
-        }
-    }
+		if ($query->getNumRows() > 0) {
+			$result = json_encode($query->getResult('array'));
+			$result = '{"query": "'. $_REQUEST['query'] . '", "suggestions":' . $result . '}';
+			echo $result;
+		} else {
+			echo json_encode(array());
+		}
+	}
 	//--------------------------------------------------------------------------
 	public function fetch_data() {
 		$model = new Customer_model();
@@ -60,13 +60,17 @@ class Customer extends BaseController {
 			'cust_note'=> $obj->cust_note,
 		);
 
-		if ($model->insert($data) == false) {
-                    $errors = $model->errors();
-                    $msg_validation['valid'] = $errors;	
-                    
+		if($model->insert($data)==0) {
+			if($model->errors()) {
+				$errors = $model->errors();
+				$msg_validation['valid'] = $errors;
+			} else {
+				$msg_validation['cust_id'] = $new_id;
+				$msg_validation['valid'] = 'Success';
+			}
 		} else {
-                    $msg_validation['cust_id'] = $new_id;
-                    $msg_validation['valid'] = 'Success';
+			$errors = $model->errors();
+			$msg_validation['valid'] = $errors;
 		}
 		echo json_encode($msg_validation);
 	}
