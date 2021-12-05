@@ -3,68 +3,41 @@ namespace App\Controllers;
 
 use CodeIgniter\Controller;
 use App\Models\Product_model;
+use App\Models\Product_cat_model;
 
 class Product extends BaseController {
-	// if user not logged in
 
 	//--------------------------------------------------------------------------
 	public function index() {
-		// echo view('main_side_bar');
 		if(!session()->get('isLoggedIn')) {
 			return redirect()->to('/login');
 		} else {
-			parent::loadView('product');
+			parent::loadView('product_view');
 		}
-
 	}
+	//--------------------------------------------------------------------------
+	function get_category() {
+		$model = new Product_cat_model();
+		$query = $model->findProdCategoryByIdOrName($_REQUEST['query']);
 
+		if ($query->getNumRows() > 0) {
+			$result = json_encode($query->getResult('array'));
+			$result = '{"query": "'. $_REQUEST['query'] . '", "suggestions":' . $result . '}';
+			echo $result;
+		} else {
+			echo json_encode(array());
+		}
+	}
 	//--------------------------------------------------------------------------
 	public function fetch_data() {
-		$db      = \Config\Database::connect();
-		$builder = $db->table('tbl_product');
-		$builder->select('*');
-		$builder->join('tbl_product_category', 'pc_id = prod_pc_id', 'left');
-		$query = $builder->get();
-		echo json_encode($query->getResult());
+		$model = new Product_model();
+		echo json_encode($model->findAll());
 	}
 	//--------------------------------------------------------------------------
 	public function fetchById() {
 		$obj = json_decode($this->request->getPost('jsarray'));
-		$db      = \Config\Database::connect();
-		$builder = $db->table('tbl_product');
-		$builder->select('tbl_product.*, tbl_product_category.pc_name');
-		$builder->join('tbl_product_category', 'pc_id = prod_pc_id', 'left');
-		$builder->where('prod_id', $obj->prod_id);
-		$query = $builder->get();
-		echo json_encode($query->getRow());
-	}
-	//--------------------------------------------------------------------------
-	public function get_new_id() {
-		$db      = \Config\Database::connect();
-		$builder = $db->table('tbl_product');
-		$builder->selectMax('prod_id');
-		$query = $builder->get();
-        if ($query->getNumRows() > 0) {
-            $row = $query->getRow();
-            $max_id = substr($row->prod_id, 1);
-            $new_id = $max_id + 1;
-            if ($new_id < 10) {
-                $new_id = "P00000" . $new_id;
-            } elseif ($new_id < 100) {
-                $new_id = "P0000" . $new_id;
-            } elseif ($new_id < 1000) {
-                $new_id = "P000" . $new_id;
-            } elseif ($new_id < 10000) {
-                $new_id = "P00" . $new_id;
-            } elseif ($new_id < 100000) {
-                $new_id = "P0" . $new_id;
-            } else {
-                $new_id = "P" . $new_id;
-            }
-            return $new_id;
-		} else {
-			return "P000001";
-		}
+		$model = new Product_model();
+		echo json_encode($model->find($obj->prod_id));
 	}
 	//--------------------------------------------------------------------------
 	public function validate_data() {
@@ -89,7 +62,8 @@ class Product extends BaseController {
 	//--------------------------------------------------------------------------
 	public function save() {
 		$obj = json_decode($this->request->getPost('jsarray'));
-		$new_id = $this->get_new_id();
+		$model = new Product_model();
+		$new_id = $model->getNewId();
 
 		$data = array(
 			'prod_id' => $new_id,
@@ -99,13 +73,10 @@ class Product extends BaseController {
 			'prod_note'	=> $obj->prod_note,
 		);
 
-		$db      = \Config\Database::connect();
-		$builder = $db->table('tbl_product');
-
 		$validation = $this->validate_data();
 
 		if ($validation->run($data)) {
-			$builder->insert($data);
+			$model->insert($data);
 			$msg_validation['prod_id'] = $new_id;
 			$msg_validation['valid'] = 'Success';
 
@@ -127,14 +98,12 @@ class Product extends BaseController {
 			'prod_note'	=> $obj->prod_note,
 		);
 
-		$db      = \Config\Database::connect();
-		$builder = $db->table('tbl_product');
-
 		$validation = $this->validate_data();
 
 		if ($validation->run($data)) {
-			$builder->where('prod_id', $obj->prod_id);
-			$builder->update($data);
+			$model = new Product_model();
+			$model->update($obj->prod_id, $data);
+
 			$msg_validation['prod_id'] = $obj->prod_id;
 			$msg_validation['valid'] = 'Success';
 
@@ -146,36 +115,14 @@ class Product extends BaseController {
 	}
 
 	//--------------------------------------------------------------------------
-	function get_category() {
-		$db = db_connect();
-		if (isset($_REQUEST['query'])) {
-			$sql = "SELECT pc_id as data, pc_name as value FROM tbl_product_category WHERE pc_id LIKE '%" . $_REQUEST['query'] . "%' OR pc_name LIKE '%" . $_REQUEST['query'] . "%'";
-			$query = $db->query($sql);
-		} else {
-			$sql = "SELECT pc_id as id, concat(pc_id, '-', pc_name) as name FROM tbl_product_category";
-			$query = $db->query($sql);
-		}
-
-		if ($query->getNumRows() > 0) {
-			$result = json_encode($query->getResult('array'));
-			$result = '{"query": "'. $_REQUEST['query'] . '", "suggestions":' . $result . '}';
-			echo $result;
-		} else {
-			echo json_encode(array());
-		}
-	}
-	//--------------------------------------------------------------------------
 	public function delete() {
 		$obj = json_decode($this->request->getPost('jsarray'));
-		$db      = \Config\Database::connect();
-		$builder = $db->table('tbl_product');
-		$builder->where('prod_id', $obj->prod_id);
-		if($builder->delete()) {
+		$model = new Product_model();
+
+		if($model->delete($obj->prod_id)) {
 			$msg_validation['valid'] = 'deleted';
 			echo json_encode($msg_validation);
-			// echo "deleted";
 		} else {
-			// echo "failed";
 			$msg_validation['valid'] = 'failed';
 			echo json_encode($msg_validation);
 		}

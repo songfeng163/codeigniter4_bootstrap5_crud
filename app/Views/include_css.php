@@ -4,3 +4,4 @@
 		<link rel="stylesheet" href="<?php echo base_url('font-awesome/css/font-awesome.min.css'); ?>">
 
 		<link rel="stylesheet" href="<?php echo base_url('css/styles.css'); ?>">
+		<link rel="stylesheet" href="<?php echo base_url('css/esms.css'); ?>">

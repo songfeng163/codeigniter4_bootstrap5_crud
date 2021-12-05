@@ -1,3 +1,4 @@
+<!DOCTYPE html>
     <div class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
@@ -58,7 +59,7 @@
                             <div class="collapse" id="collapseTran" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="<?php echo site_url('/customer') ?>">Sales</a>
-                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Purhchse</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Purhchase</a>
                                     <a class="nav-link" href="<?php echo site_url('/customer') ?>">Money Receipt</a>
                                     <a class="nav-link" href="<?php echo site_url('/customer') ?>">Vendor Payment</a>
                                 </nav>
@@ -71,10 +72,13 @@
                             </a>
                             <div class="collapse" id="collapseReport" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Sales</a>
-                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Purhchse</a>
-                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Money Receipt</a>
-                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Vendor Payment</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Cash Balance Report</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Customer Ledger</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Vendor Ledger</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Sales Report</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Purhchse Report</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Stock Report</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer') ?>">Expense Report</a>
                                 </nav>
                             </div>
                         </div>

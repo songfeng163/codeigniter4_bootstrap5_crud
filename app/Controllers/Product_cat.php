@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 use CodeIgniter\Controller;
+use App\Models\Product_cat_model;
 
 class Product_cat extends BaseController {
 	//--------------------------------------------------------------------------
@@ -9,54 +10,32 @@ class Product_cat extends BaseController {
 		if(!session()->get('isLoggedIn')) {
 			return redirect()->to('/login');
 		} else {
-			parent::loadView('product_cat');
+			parent::loadView('product_cat_view');
 		}
 	}
 	//--------------------------------------------------------------------------
 	public function fetch_data() {
-		$db      = \Config\Database::connect();
-		$builder = $db->table('tbl_product_category');
-		$builder->select('*');
-		$query = $builder->get();
-		echo json_encode($query->getResult());
+		// $db      = \Config\Database::connect();
+		// $builder = $db->table('tbl_product_category');
+		// $builder->select('*');
+		// $query = $builder->get();
+		// echo json_encode($query->getResult());
+
+		$model = new Product_cat_model();
+		echo json_encode($model->findAll());
 	}
 	//--------------------------------------------------------------------------
 	public function fetchById() {
 		$obj = json_decode($this->request->getPost('jsarray'));
-		$db      = \Config\Database::connect();
-		$builder = $db->table('tbl_product_category');
-		$builder->select('*');
-		$builder->where('pc_id', $obj->pc_id);
-		$query = $builder->get();
-		echo json_encode($query->getRow());
-	}
-	//--------------------------------------------------------------------------
-	public function get_new_id() {
-		$db      = \Config\Database::connect();
-		$builder = $db->table('tbl_product_category');
-		$builder->selectMax('pc_id');
-		$query = $builder->get();
-        if ($query->getNumRows() > 0) {
-            $row = $query->getRow();
-            $max_id = substr($row->pc_id, 2);
-            $new_id = $max_id + 1;
-            if ($new_id < 10) {
-                $new_id = "PC00000" . $new_id;
-            } elseif ($new_id < 100) {
-                $new_id = "PC0000" . $new_id;
-            } elseif ($new_id < 1000) {
-                $new_id = "PC000" . $new_id;
-            } elseif ($new_id < 10000) {
-                $new_id = "PC00" . $new_id;
-            } elseif ($new_id < 100000) {
-                $new_id = "PC0" . $new_id;
-            } else {
-                $new_id = "PC" . $new_id;
-            }
-            return $new_id;
-		} else {
-			return "PC000001";
-		}
+		// $db      = \Config\Database::connect();
+		// $builder = $db->table('tbl_product_category');
+		// $builder->select('*');
+		// $builder->where('pc_id', $obj->pc_id);
+		// $query = $builder->get();
+		// echo json_encode($query->getRow());
+
+		$model = new Product_cat_model();
+		echo json_encode($model->find($obj->pc_id));
 	}
 	//--------------------------------------------------------------------------
 	public function validate_data() {
@@ -80,21 +59,25 @@ class Product_cat extends BaseController {
 	public function save() {
 		$obj = json_decode($this->request->getPost('jsarray'));
 
-		$new_id = $this->get_new_id();
+		$model = new Product_cat_model();
+		$new_id = $model->getNewId();
 
-		$data = array(
+		$data = [
 			'pc_id' => $new_id,
 			'pc_name' => $obj->pc_name,
 			'pc_note' => $obj->pc_note,
-		);
+		];
 
-		$db      = \Config\Database::connect();
-		$builder = $db->table('tbl_product_category');
+		// $db      = \Config\Database::connect();
+		// $builder = $db->table('tbl_product_category');
 
 		$validation = $this->validate_data();
 
 		if ($validation->run($data)) {
-			$builder->insert($data);
+		 	// $builder->insert($data);
+
+			$model->insert($data);
+
 			$msg_validation['pc_id'] = $new_id;
 			$msg_validation['valid'] = 'Success';
 
@@ -114,14 +97,16 @@ class Product_cat extends BaseController {
 			'pc_note'			=> $obj->pc_note,
 		);
 
-		$db      = \Config\Database::connect();
-		$builder = $db->table('tbl_product_category');
+		// $db      = \Config\Database::connect();
+		// $builder = $db->table('tbl_product_category');
 
 		$validation = $this->validate_data();
 
 		if ($validation->run($data)) {
-			$builder->where('pc_id', $obj->pc_id);
-			$builder->update($data);
+			// $builder->where('pc_id', $obj->pc_id);
+			// $builder->update($data);
+			$model = new Product_cat_model();
+			$model->update($obj->pc_id, $data);
 			$msg_validation['pc_id'] = $obj->pc_id;
 			$msg_validation['valid'] = 'Success';
 
@@ -135,10 +120,11 @@ class Product_cat extends BaseController {
 	//--------------------------------------------------------------------------
 	public function delete() {
 		$obj = json_decode($this->request->getPost('jsarray'));
-		$db      = \Config\Database::connect();
-		$builder = $db->table('tbl_product_category');
-		$builder->where('pc_id', $obj->pc_id);
-		if($builder->delete()) {
+		// $db      = \Config\Database::connect();
+		// $builder = $db->table('tbl_product_category');
+		// $builder->where('pc_id', $obj->pc_id);
+		$model = new Product_cat_model();
+		if($model->delete($obj->pc_id)) {
 			$msg_validation['valid'] = 'deleted';
 			echo json_encode($msg_validation);
 			// echo "deleted";

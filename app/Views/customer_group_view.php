@@ -1,123 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<?php echo view('include_css'); ?>
-	</head>
+<div id="layoutSidenav_content">
+	<div class="container col-md-12 col-sm-12 col-lg-5 ">
+		<div class="pt-5"> </div>
+		<div class="pt-5 float-left">
+			<h3>Customer Group</h3>
+		</div>
 
-	<body class="bg-white">
+		<div class="pt-5"> </div>
+		<div class="float-right">
+			<button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#addModal"> Add New Group</button>
+		</div>
+		<div class="py-md-5"> </div>
+		<table id="tblcustgroup" class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Group</th>
+					<th>Note</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody id="show_data">
 
-		<?php echo view('main_side_bar'); ?>
+			</tbody>
+		</table>
+	</div> <!-- end container -->
+</div> <!-- Layout Side nav Content -->
 
-		<div id="layoutSidenav_content">
-			<div class="container col-md-5 col-sm-5 col-lg-5 ">
-				<div class="pt-5"> </div>
-				<div class="pt-5 float-left">
-					<h3>Customer Group</h3>
-				</div>
+<!-- Modal for Message -->
+<div class="modal fade" id="msgModal" tabindex="1" aria-hidden="true">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Message</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"> </button>
+			</div>
+			<div class="modal-body">
+				<div id="msgDialog"><p></p></div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End Modal Message -->
 
-				<div class="pt-5"> </div>
-				<div class="float-right">
-					<button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#addModal"> Add New Group</button>
-				</div>
-				<div class="py-md-5"> </div>
-				<table id="tblcustgroup" class="table table-striped table-bordered">
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>Group</th>
-							<th>Note</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody id="show_data">
-
-					</tbody>
-				</table>
-			</div> <!-- end container -->
-		</div> <!-- Layout Side nav Content -->
-
-	<!-- Modal for Message -->
-	<div class="modal fade" id="msgModal" tabindex="1" aria-hidden="true">
-		<div class="modal-dialog modal-sm" role="document">
+<!-- Modal Add Product -->
+<form action="" method="post">
+	<div class="modal fade" id="addModal" tabindex="1" aria-hidden="true">
+		<div class="modal-dialog modal-md" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Message</h5>
+					<h5 class="modal-title">Add/Edit Group</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"> </button>
 				</div>
 				<div class="modal-body">
-					<div id="msgDialog"><p></p></div>
+					<div class="form-group">
+						<label>Group Name</label>
+						<input type="text" class="form-control" name="cg_name" id="cg_name" placeholder="Group Name">
+					</div>
+					<div class="form-group">
+						<label>Note</label>
+						<input type="text" class="form-control" name="cg_note" id="cg_note" placeholder="Note">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" name="Exit" id="exit" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i>Exit</button></td>
+				<button type="button" name="btnSubmit" id="btnSubmit" class="btn btn-primary"><i class="fa fa-fw fa-plus-square"></i>Save</button></td>
+			<button type="button" name="btn" id="btnEdit" class="btn btn-primary"><i class="fa fa-fw fa-edit"></i>Update</button></td>
+
+		<!-- To Show Validation Message to the User -->
+		<div id="msgAddValidation"><p></p></div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<!-- End Modal Message -->
+</form>
+<!-- End for Modal Add Product-->
 
-	<!-- Modal Add Product -->
-	<form action="" method="post">
-		<div class="modal fade" id="addModal" tabindex="1" aria-hidden="true">
-			<div class="modal-dialog modal-md" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title">Add/Edit Group</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"> </button>
-					</div>
-					<div class="modal-body">
-						<div class="form-group">
-							<label>Group Name</label>
-							<input type="text" class="form-control" name="cg_name" id="cg_name" placeholder="Group Name">
-						</div>
-						<div class="form-group">
-							<label>Note</label>
-							<input type="text" class="form-control" name="cg_note" id="cg_note" placeholder="Note">
-						</div>
-					</div>
-					<div class="modal-footer">
-					<button type="button" name="Exit" id="exit" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i>Exit</button></td>
-					<button type="button" name="btnSubmit" id="btnSubmit" class="btn btn-primary"><i class="fa fa-fw fa-plus-square"></i>Save</button></td>
-					<button type="button" name="btn" id="btnEdit" class="btn btn-primary"><i class="fa fa-fw fa-edit"></i>Update</button></td>
-
-					<!-- To Show Validation Message to the User -->
-					<div id="msgAddValidation"><p></p></div>
+<!-- Modal Delete Product-->
+<form action="" method="post">
+	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Warning</h5>
+					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<h4>Are you to delete?</h4>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+					<button id="btnDelete" type="button" class="btn btn-primary">Yes</button>
 				</div>
 			</div>
 		</div>
-		</div>
-	</form>
-	<!-- End for Modal Add Product-->
+	</div>
+</form>
+<!-- End Modal Delete Product-->
 
-	<!-- Modal Delete Product-->
-    <form action="" method="post">
-        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Warning</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-               <h4>Are you to delete?</h4>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                <button id="btnDelete" type="button" class="btn btn-primary">Yes</button>
-            </div>
-            </div>
-        </div>
-        </div>
-    </form>
-    <!-- End Modal Delete Product-->
-
-	<!-- Field to detect Save/Update State of Add Modal Form  -->
-	<!-- Field to Submit ID for Save/Edit/Delete of the Form -->
-	<input type="hidden" name="cg_id" id="cg_id">
-
-	<!-- Include Additional JS Files-->
-	<?php echo view('include_js') ?>
+<!-- Field to detect Save/Update State of Add Modal Form  -->
+<!-- Field to Submit ID for Save/Edit/Delete of the Form -->
+<input type="hidden" name="cg_id" id="cg_id">
 
 	<script>
 
@@ -325,6 +309,4 @@
 		});
 		//----------------------------------------------------------------------
 	});
-	</script>
-</body>
-</html>
+</script>

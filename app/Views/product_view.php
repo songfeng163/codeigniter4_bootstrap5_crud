@@ -1,126 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<div id="layoutSidenav_content">
+	<div class="container col-md-12 col-sm-12 col-lg-12 offset-lg-2 ">
+		<div class="pt-5"> </div>
+		<div class="pt-5 float-left">
+			<h3>Product Lists</h3>
+		</div>
+		<div class="pt-5"> </div>
+		<div class="float-right">
+			<button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#addModal"> Add New Product Record </button>
+		</div>
+		<div class="py-md-5"> </div>
+		<table id="tblproduct" class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Product Name</th>
+					<th>Price</th>
+					<th>Category</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody id="show_data">
 
-		<?php echo view('include_css'); ?>
-	</head>
-	<body class="bg-white">
-		<div id="layoutSidenav_content">
-			<div class="container col-md-7 col-sm-7 col-lg-7 ">
-				<div class="pt-5"> </div>
-				<div class="pt-5 float-left">
-					<h3>Product Lists</h3>
-				</div>
-				<div class="pt-5"> </div>
-				<div class="float-right">
-					<button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#addModal"> Add New Product Record </button>
-				</div>
-				<div class="py-md-5"> </div>
-				<table id="tblproduct" class="table table-striped table-bordered">
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>Product Name</th>
-							<th>Price</th>
-							<th>Category</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody id="show_data">
+			</tbody>
+		</table>
+	</div> <!-- end container -->
+</div> <!-- Layout Side nav Content -->
 
-					</tbody>
-				</table>
-			</div> <!-- end container -->
-		</div> <!-- Layout Side nav Content -->
+<!-- Modal for Message -->
+<div class="modal fade" id="msgModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Warning!</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"> </button>
+			</div>
+			<div class="modal-body">
+				<div id="msgDialog"><p></p></div>
+			</div>
+		</div>
+	</div>
+</div>
 
-	<!-- Modal for Message -->
-	<div class="modal fade" id="msgModal" tabindex="1" aria-hidden="true">
-		<div class="modal-dialog modal-sm" role="document">
+<!-- Modal Add Product -->
+<form action="" method="post">
+	<div class="modal fade" id="addModal" tabindex="1" aria-hidden="true">
+		<div class="modal-dialog modal-md" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Warning!</h5>
+					<h5 class="modal-title">Add/Edit Product</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"> </button>
 				</div>
 				<div class="modal-body">
-					<div id="msgDialog"><p></p></div>
+					<div class="form-group">
+						<label>Product Name</label>
+						<input type="text" class="form-control" name="prod_name" id="prod_name" placeholder="Product Name">
+					</div>
+					<div class="form-group">
+						<label>Price</label>
+						<input type="text" class="form-control" name="prod_price" id="prod_price" placeholder="Product Price">
+					</div>
+					<div class="form-group">
+						<label>Category</label>
+						<input type="text" id="prod_pc_id_input">
+					</div>
+					<div class="form-group">
+						<label>Note</label>
+						<input type="text" class="form-control" name="prod_note" id="prod_note" placeholder="Note">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" name="Exit" id="exit" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i>Exit</button></td>
+					<button type="button" name="btnSubmit" id="btnSubmit" class="btn btn-primary"><i class="fa fa-fw fa-plus-square"></i>Save</button></td>
+					<button type="button" name="btn" id="btnEdit" class="btn btn-primary"><i class="fa fa-fw fa-edit"></i>Update</button></td>
+					<div id="msgAddValidation"><p></p></div>
+			</div>
+		</div>
+	</div>
+	</div>
+</form>
+<!-- End for Modal Add Product-->
+
+<!-- Modal Delete Product-->
+<form action="" method="post">
+	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Delete Product</h5>
+					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<h4>Are you sure want to delete this product?</h4>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+					<button id="btnDelete" type="button" class="btn btn-primary">Yes</button>
 				</div>
 			</div>
 		</div>
 	</div>
+</form>
+<!-- End Modal Delete Product-->
 
-	<!-- Modal Add Product -->
-	<form action="" method="post">
-		<div class="modal fade" id="addModal" tabindex="1" aria-hidden="true">
-			<div class="modal-dialog modal-md" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title">Add/Edit Product</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"> </button>
-					</div>
-					<div class="modal-body">
-						<div class="form-group">
-							<label>Product Name</label>
-							<input type="text" class="form-control" name="prod_name" id="prod_name" placeholder="Product Name">
-						</div>
-						<div class="form-group">
-							<label>Price</label>
-							<input type="text" class="form-control" name="prod_price" id="prod_price" placeholder="Product Price">
-						</div>
-						<div class="form-group">
-							<label>Category</label>
-							<input type="text" id="prod_pc_id_input">
-						</div>
-						<div class="form-group">
-							<label>Note</label>
-							<input type="text" class="form-control" name="prod_note" id="prod_note" placeholder="Note">
-						</div>
-					</div>
-					<div class="modal-footer">
-					<button type="button" name="Exit" id="exit" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa fa-times-circle"></i>Exit</button></td>
-					<button type="button" name="btnSubmit" id="btnSubmit" class="btn btn-primary"><i class="fa fa-fw fa-plus-square"></i>Save</button></td>
-					<button type="button" name="btn" id="btnEdit" class="btn btn-primary"><i class="fa fa-fw fa-edit"></i>Update</button></td>
-					<input type="hidden" id="prod_pc_id_hidden"></div>
-					<div id="msgAddValidation"><p></p></div>
-				</div>
-			</div>
-		</div>
-		</div>
-	</form>
-	<!-- End for Modal Add Product-->
+<!-- Field to detect Save/Update State of Add Modal Form  -->
+<!-- Field to Submit ID for Save/Edit/Delete of the Form -->
+<input type="hidden" name="prod_id" id="prod_id">
+<input type="hidden" id="prod_pc_id_hidden"></div>
 
-	<!-- Modal Delete Product-->
-    <form action="" method="post">
-        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete Product</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-               <h4>Are you sure want to delete this product?</h4>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                <button id="btnDelete" type="button" class="btn btn-primary">Yes</button>
-            </div>
-            </div>
-        </div>
-        </div>
-    </form>
-    <!-- End Modal Delete Product-->
-
-	<!-- Field to detect Save/Update State of Add Modal Form  -->
-	<!-- Field to Submit ID for Save/Edit/Delete of the Form -->
-	<input type="hidden" name="prod_id" id="prod_id">
-
-	<!-- Include Additional JS Files-->
-	<?php echo view('include_js') ?>
 <script>
 
 	$(document).ready(function() {
@@ -224,13 +212,14 @@
 						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.prod_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.prod_id + '"><i class="fa fa-trash"></i>Delete</a>'
 					]);
 					clear_field();
-					$('#addModal').modal('hide');
 					$('#msgModal').modal('show');
+					$('#addModal').modal('hide');
 				} else {
 					$('#msgAddValidation > p').html(response.valid);
 				}
 			});
 		});
+
 		//----------------------------------------------------------------------
 	    $('#show_data').on('click','.btn-edit',function() {
 			// get data from button edit
@@ -346,5 +335,3 @@
 		//----------------------------------------------------------------------
 	});
 </script>
-</body>
-</html>

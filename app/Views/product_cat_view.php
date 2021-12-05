@@ -1,26 +1,24 @@
 <div id="layoutSidenav_content">
-	<div class="container col-md-12 col-sm-12 col-lg-12 offset-lg-2 ">
+	<div class="container col-md-12 col-sm-12 col-lg-5">
 		<div class="pt-5"> </div>
 		<div class="pt-5 float-left">
-			<h3>Product Lists</h3>
+			<h3>Product Category</h3>
 		</div>
 		<div class="pt-5"> </div>
 		<div class="float-right">
-			<button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#addModal"> Add New Product Record </button>
+			<button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal" data-bs-target="#addModal"> Add New Category</button>
 		</div>
 		<div class="py-md-5"> </div>
 		<table id="tblproduct" class="table table-striped table-bordered">
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>Product Name</th>
-					<th>Price</th>
 					<th>Category</th>
+					<th>Note</th>
 					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody id="show_data">
-
 			</tbody>
 		</table>
 	</div> <!-- end container -->
@@ -47,25 +45,17 @@
 		<div class="modal-dialog modal-md" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Add/Edit Product</h5>
+					<h5 class="modal-title">Add/Edit Category</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"> </button>
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label>Product Name</label>
-						<input type="text" class="form-control" name="prod_name" id="prod_name" placeholder="Product Name">
-					</div>
-					<div class="form-group">
-						<label>Price</label>
-						<input type="text" class="form-control" name="prod_price" id="prod_price" placeholder="Product Price">
-					</div>
-					<div class="form-group">
-						<label>Category</label>
-						<input type="text" id="prod_pc_id_input">
+						<label>Category Name</label>
+						<input type="text" class="form-control" name="pc_name" id="pc_name" placeholder="Category Name">
 					</div>
 					<div class="form-group">
 						<label>Note</label>
-						<input type="text" class="form-control" name="prod_note" id="prod_note" placeholder="Note">
+						<input type="text" class="form-control" name="pc_note" id="pc_note" placeholder="Note">
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -73,9 +63,9 @@
 					<button type="button" name="btnSubmit" id="btnSubmit" class="btn btn-primary"><i class="fa fa-fw fa-plus-square"></i>Save</button></td>
 					<button type="button" name="btn" id="btnEdit" class="btn btn-primary"><i class="fa fa-fw fa-edit"></i>Update</button></td>
 					<div id="msgAddValidation"><p></p></div>
+				</div>
 			</div>
 		</div>
-	</div>
 	</div>
 </form>
 <!-- End for Modal Add Product-->
@@ -86,13 +76,13 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Delete Product</h5>
+					<h5 class="modal-title" id="exampleModalLabel">Delete Category</h5>
 					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					<h4>Are you sure want to delete this product?</h4>
+					<h4>Are you sure to delete?</h4>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
@@ -106,12 +96,9 @@
 
 <!-- Field to detect Save/Update State of Add Modal Form  -->
 <!-- Field to Submit ID for Save/Edit/Delete of the Form -->
-<input type="hidden" name="prod_id" id="prod_id">
-<input type="hidden" id="prod_pc_id_hidden"></div>
+<input type="hidden" name="pc_id" id="pc_id">
 
-<!-- Include Additional JS Files-->
-<?php echo view('include_js') ?>
-<script>
+	<script>
 
 	$(document).ready(function() {
 
@@ -125,12 +112,12 @@
 			$('#msgAddValidation > p').html('');
 		}
 		//----------------------------------------------------------------------
-		$("#addModal").on("hidden.bs.modal", function(){
+		$("#addModal").on("hidden.bs.modal", function() {
 			clear_field();
 		});
 		//----------------------------------------------------------------------
 		$('#addModal').on('shown.bs.modal', function (e) {
-			if($('#prod_id').val().length == 0) {
+			if($('#pc_id').val().length == 0) {
 				clear_field();
 				$('#btnEdit').hide();
 				$('#btnSubmit').show();
@@ -148,8 +135,7 @@
 					"bAutoWidth": false,
 					"aoColumns":[
 						{sClass:"left"},
-						{sClass:"left", "sWidth":"370px"},
-						{sClass:"right"},
+						{sClass:"left", "sWidth":"200px"},
 						{sClass:"right"},
 						{sClass:"center"}]
 				});
@@ -159,18 +145,18 @@
 		//----------------------------------------------------------------------
 		function fetch_data() {
 			var request = $.ajax({
-				url: '<?php echo site_url("product/fetch_data"); ?>',
+				url: '<?php echo site_url("product_cat/fetch_data"); ?>',
 				dataType: 'json',
 			});
+
 			request.done(function(response) {
 				if (response.length > 0) {
 					for(var i in response) {
 						dataTable.fnAddData([
-							response[i].prod_id,
-							response[i].prod_name,
-							response[i].prod_price,
+							response[i].pc_id,
 							response[i].pc_name,
-							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].prod_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].prod_id + '"><i class="fa fa-trash"></i>Delete</a>'
+							response[i].pc_note,
+							'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response[i].pc_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response[i].pc_id + '"><i class="fa fa-trash"></i>Delete</a>'
 						], false);
 					}
 					dataTable.fnDraw(true);
@@ -179,25 +165,15 @@
 				}
 			});
 		}
-		//----------------------------------------------------------------------
-		$('#prod_pc_id_input').autocomplete({
-			serviceUrl: '<?php echo site_url("product/get_category"); ?>',
-			onSelect:function (suggestion) {
-				// alert('You selected: ' + suggestion.value +', ' + suggestion.data);
-				$('#prod_pc_id_hidden').val(suggestion.data);
-			}
-		});
 		//-----------------------------------------------------------------
 		$('#btnSubmit').button().click(function() {
 			var jsonStr = [];
 
-			jsonStr = {"prod_name":$('#prod_name').val(),
-				"prod_price":$('#prod_price').val(),
-				"prod_pc_id":$('#prod_pc_id_hidden').val(),
-				"prod_note":$('#prod_note').val()};
+			jsonStr = {"pc_name":$('#pc_name').val(),
+						"pc_note":$('#pc_note').val()};
 
 			var request = $.ajax({
-				url: '<?php echo site_url("product/save"); ?>',
+				url: '<?php echo site_url("product_cat/save"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
@@ -207,65 +183,64 @@
 				if(response.valid == "Success") {
 					$('#msgDialog > p').html("Data Saved Successfully");
 					//Show new records in the data table
-					dataTable.fnAddData([response.prod_id,
-						$('#prod_name').val(),
-						$('#prod_price').val(),
-						$('#prod_pc_id_input').val(),
-						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.prod_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.prod_id + '"><i class="fa fa-trash"></i>Delete</a>'
+					dataTable.fnAddData([response.pc_id,
+						$('#pc_name').val(),
+						$('#pc_note').val(),
+						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.pc_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.pc_id + '"><i class="fa fa-trash"></i>Delete</a>'
 					]);
 					clear_field();
-					$('#msgModal').modal('show');
 					$('#addModal').modal('hide');
+					$('#msgModal').modal('show');
+					// $("#update").button("enable");
+					// $("#btnSubmit").button("disable");
 				} else {
+					// $('#addModal').modal('hide');
 					$('#msgAddValidation > p').html(response.valid);
+					// $('#msgModal').modal('show');
+					// $("#btnSubmit").button("enable");
 				}
 			});
 		});
-
 		//----------------------------------------------------------------------
-	    $('#show_data').on('click','.btn-edit',function() {
+		    $('#show_data').on('click','.btn-edit',function() {
 			// get data from button edit
 			const id = $(this).data('id');
 			update_position = dataTable.fnGetPosition($(this).parents('tr')[0]);
 			// Set data to Form Edit
-			$('#prod_id').val(id);
+			$('#pc_id').val(id);
 
 			var jsonStr = [];
-			jsonStr = {"prod_id": id};
+			jsonStr = {"pc_id": id};
 
 			var request = $.ajax({
-				url: '<?php echo site_url("product/fetchById"); ?>',
+				url: '<?php echo site_url("product_cat/fetchById"); ?>',
 				type: 'POST',
 				dataType: 'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
 			});
 
 			request.done(function(response) {
-				if (response.prod_id.length > 0) {
-					$('#prod_id').val(response.prod_id);
-					$('#prod_name').val(response.prod_name),
-					$('#prod_price').val(response.prod_price),
-					$('#prod_pc_id_input').val(response.pc_name),
-					$('#prod_pc_id_hidden').val(response.prod_pc_id),
-					$('#prod_note').val(response.prod_note),
-					$('#addModal').modal('show');
+				if (response.pc_id.length > 0) {
+					$('#pc_id').val(response.pc_id);
+					$('#pc_name').val(response.pc_name),
+						$('#pc_note').val(response.pc_note),
+						$('#addModal').modal('show');
 				} else {
 
 				}
 			});
+			// Call Modal Edit
+			// $('#deleteModal').modal('show');
 		});
 		//-----------------------------------------------------------------
 		$('#btnEdit').button().click(function() {
 			var jsonStr = [];
-
-			jsonStr = {"prod_id":$('#prod_id').val(),
-				"prod_name":$('#prod_name').val(),
-				"prod_price":$('#prod_price').val(),
-				"prod_pc_id":$('#prod_pc_id_hidden').val(),
-				"prod_note":$('#prod_note').val()};
+			jsonStr = {"pc_id":$('#pc_id').val(),
+				"pc_name":$('#pc_name').val(),
+				"pc_note":$('#pc_note').val()};
 
 			var request = $.ajax({
-				url: '<?php echo site_url("product/edit"); ?>',
+				url: '<?php echo site_url("product_cat/edit"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
@@ -275,52 +250,57 @@
 				if(response.valid == "Success") {
 					$('#msgDialog > p').html("Data Updated Successfully");
 					//Show new records in the data table
-					dataTable.fnUpdate([response.prod_id,
-						$('#prod_name').val(),
-						$('#prod_price').val(),
-						$('#prod_pc_id_input').val(),
-						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.prod_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.prod_id + '"><i class="fa fa-trash"></i>Delete</a>'
+					dataTable.fnUpdate([response.pc_id,
+						$('#pc_name').val(),
+						$('#pc_note').val(),
+						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.pc_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.pc_id + '"><i class="fa fa-trash"></i>Delete</a>'
 					], update_position);
 					clear_field();
 					$('#addModal').modal('hide');
 					$('#msgModal').modal('show');
+					// $("#update").button("enable");
+					// $("#btnSubmit").button("disable");
 				} else {
+					// $('#addModal').modal('hide');
 					$('#msgAddValidation > p').html(response.valid);
+					// $('#msgModal').modal('show');
+					// $("#btnSubmit").button("enable");
 				}
 			});
 		});
 		//----------------------------------------------------------------------
-	    $('#show_data').on('click','.btn-delete',function(){
+		    $('#show_data').on('click','.btn-delete',function(){
 			// get data from button edit
 			const id = $(this).data('id');
 			// Set data to Form Edit
-			$('#prod_id').val(id);
+			$('#pc_id').val(id);
 			// Call Modal Edit
 			$('#deleteModal').modal('show');
 		});
-
 		//----------------------------------------------------------------------
 		$('#btnDelete').button().click(function() {
 			var jsonStr = [];
-			jsonStr = {"prod_id":$('#prod_id').val()};
+			jsonStr = {"pc_id":$('#pc_id').val()};
+
 			var request = $.ajax({
-				url: '<?php echo site_url("product/delete"); ?>',
+				url: '<?php echo site_url("product_cat/delete"); ?>',
 				type: 'POST',
 				dataType:'json',
 				data: {'jsarray': $.toJSON(jsonStr)},
 			});
+
 			request.done(function(response) {
 				$('#deleteModal').modal('hide');
 				if(response.valid == 'deleted'){
-					$('[data-id="' + $('#prod_id').val() + '"]').parents('tr').fadeOut('slow', function() {
+					$('[data-id="' + $('#pc_id').val() + '"]').parents('tr').fadeOut('slow', function() {
 						cur_tr = this;
 						dataTable.fnDeleteRow(cur_tr);
 					});
-					$('#prod_id').val('');
+					$('#pc_id').val('');
 					$('#msgDialog > p').html('Successfully ' + response.valid);
 					$('#msgModal').modal('show');
 				} else {
-					$('#prod_id').val('');
+					$('#pc_id').val('');
 					$('#msgDialog > p').html(response.valid + ' to delete');
 					$('#deleteModal').modal('hide');
 					$('#msgModal').modal('show');
@@ -328,7 +308,7 @@
 			});
 
 			request.fail(function(response) {
-				$('#msgDialog > p').html('Cannot delete');
+				$('#msgDialog > p').html('Cannot be deleted');
 				$('#deleteModal').modal('hide');
 				$('#msgModal').modal('show');
 			});
@@ -336,4 +316,4 @@
 		});
 		//----------------------------------------------------------------------
 	});
-</script>
+	</script>

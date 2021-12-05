@@ -1,23 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-		<?php echo view('include_css'); ?>
-		<style type="text/css" media="all">
-			#layoutSidenav_content {
-				margin-left: 177px;
-			}
-		</style>
-	</head>
-    <body class="">
-		<div id="layoutSidenav_content">
+		<div class="offset-lg-2 mt-lg-6 mt-6" id="layoutSidenav_content">
 			<main>
-					<div class="container-fluid col-md-12 col-sm-12 col-lg-11 ">
-						<div class="pt-5"> </div>
-						<div class="pt-5"> </div>
+					<div class="container col-md-12 col-sm-12 col-lg-12">
                         <ol class="breadcrumb bg-light text-muted">
 							<li> <i class="fas fa-tachometer-alt"></i> Dashboard </li>
 						</ol>
@@ -147,7 +130,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+					</div> <!-- main row -->
                 </main>
 
                 <footer class="py-4 bg-light mt-auto">
@@ -183,5 +166,3 @@ $(document).ready(function() {
 
 });
 </script>
-</body>
-</html>

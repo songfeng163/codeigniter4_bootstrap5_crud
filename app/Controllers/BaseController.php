@@ -52,7 +52,9 @@ class BaseController extends Controller
     }
 
 	public function loadView($view_name) {
+		echo view('header_view');
+		echo view('main_side_bar_view');
 		echo view($view_name);
-		echo view('main_side_bar');
+		echo view('footer_view');
 	}
 }

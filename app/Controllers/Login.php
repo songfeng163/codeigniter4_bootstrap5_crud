@@ -10,7 +10,7 @@ class Login extends BaseController
     public function index()
     {
         helper(['form']);
-        echo view('login');
+        echo view('login_view');
     }
 
 	//-------------------------------------------------------
@@ -62,6 +62,6 @@ class Login extends BaseController
 	//-------------------------------------------------------
 
 	public function load_dash_board() {
-			parent::loadView('dash_board');
+			parent::loadView('dash_board_view');
 	}
 }
