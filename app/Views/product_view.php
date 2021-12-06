@@ -31,7 +31,7 @@
 	<div class="modal-dialog modal-sm" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Warning!</h5>
+				<h5 class="modal-title">Message</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"> </button>
 			</div>
 			<div class="modal-body">
@@ -82,17 +82,15 @@
 
 <!-- Modal Delete Product-->
 <form action="" method="post">
-	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
+	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm" role="document">
 			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Delete Product</h5>
-					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
+				<div class="modal-header bg-warning">
+					<h5 class="modal-title" id="deleteModalLabel">Delete Product</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
 				</div>
 				<div class="modal-body">
-					<h4>Are you sure want to delete this product?</h4>
+					<p>Are you sure to delete?</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
@@ -212,10 +210,17 @@
 						'<a class="btn btn-primary btn-sm btn-edit" href="#" data-id="' + response.prod_id + '"><i class="fa fa-edit"></i>Edit</a> <a class="btn btn-danger btn-sm btn-delete" href="#" data-id="' + response.prod_id + '"><i class="fa fa-trash"></i>Delete</a>'
 					]);
 					clear_field();
-					$('#msgModal').modal('show');
 					$('#addModal').modal('hide');
+					$('#msgModal').modal('show');
 				} else {
-					$('#msgAddValidation > p').html(response.valid);
+					var txt_error = "";
+					if (Object.keys(response.valid).length > 0) {
+						var arr_msg = Object.values(response.valid);
+						for(var i in arr_msg) {
+							txt_error = txt_error + arr_msg[i];
+						}
+					}
+					$('#msgAddValidation > p').html(txt_error);
 				}
 			});
 		});
@@ -283,7 +288,14 @@
 					$('#addModal').modal('hide');
 					$('#msgModal').modal('show');
 				} else {
-					$('#msgAddValidation > p').html(response.valid);
+					var txt_error = "";
+					if (Object.keys(response.valid).length > 0) {
+						var arr_msg = Object.values(response.valid);
+						for(var i in arr_msg) {
+							txt_error = txt_error + arr_msg[i];
+						}
+					}
+					$('#msgAddValidation > p').html(txt_error);
 				}
 			});
 		});

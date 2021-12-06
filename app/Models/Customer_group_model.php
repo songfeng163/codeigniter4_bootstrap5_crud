@@ -14,6 +14,17 @@ class Customer_group_model extends Model {
 		'cg_id', 'cg_name', 'cg_note'
 	];
 
+	protected $validationRules  = [
+		'cg_name' => 'required|min_length[2]|max_length[100]',
+	];
+
+	protected $validationMessages = [
+		'cg_name' => [
+			'required' => 'Group name is required.',
+			'min_length' => 'Minimum 2 characters.',
+			'max_length' => 'Maximum 100 characters.',
+		],
+	];
 	//-------------------------------------------------
 	public function findCustGroupByIdOrName($str_search) {
 		if (isset($str_search)) {

@@ -10,7 +10,7 @@ class Customer_group extends BaseController {
 
     //--------------------------------------------------------------------------
     public function index() {
-        
+
         if (!session()->get('isLoggedIn')) {
             return redirect()->to('/login');
         } else {
@@ -30,25 +30,6 @@ class Customer_group extends BaseController {
         $model = new Customer_group_model();
         echo json_encode($model->find($obj->cg_id));
     }
-
-    //--------------------------------------------------------------------------
-    public function validate_data() {
-        $validation = \Config\Services::validation();
-
-        $rules = [
-            'cg_name' => 'required|min_length[2]|max_length[100]',
-        ];
-
-        $messages = [
-            'cg_name' => [
-                'required' => 'Group name is required.',
-                'min_length' => 'Minimum 2 characters.',
-                'max_length' => 'Maximum 100 characters.',
-            ],
-        ];
-
-        return $validation->setRules($rules, $messages);
-    }
     //--------------------------------------------------------------------------
     public function save() {
         $obj = json_decode($this->request->getPost('jsarray'));
@@ -60,25 +41,25 @@ class Customer_group extends BaseController {
             'cg_name' => $obj->cg_name,
             'cg_note' => $obj->cg_note,
         ];
-      
-       
-        $validation = $this->validate_data();
 
-        if ($validation->run($data)) {
-            
-            $qry = $model->insert($data);
-            
-            $msg_validation['cg_id'] = $new_id;
-            $msg_validation['valid'] = 'Success';
+		if($model->insert($data)==0) {
+			if($model->errors()) {
+				$errors = $model->errors();
+				$msg_validation['valid'] = $errors;
+			} else {
+				$msg_validation['cg_id'] = $new_id;
+				$msg_validation['valid'] = 'Success';
+			}
         } else {
-            $errors = $validation->listErrors();
-            $msg_validation['valid'] = $errors;
+				$errors = $model->errors();
+				$msg_validation['valid'] = $errors;
         }
         echo json_encode($msg_validation);
     }
     //--------------------------------------------------------------------------
     public function edit() {
         $obj = json_decode($this->request->getPost('jsarray'));
+		$model = new Customer_group_model();
 
         $data = array(
             'cg_id' => $obj->cg_id,
@@ -86,12 +67,7 @@ class Customer_group extends BaseController {
             'cg_note' => $obj->cg_note,
         );
 
-        $validation = $this->validate_data();
-
-        if ($validation->run($data)) {
-            $model = new Customer_group_model();
-            $model->update($obj->cg_id, $data);
-
+		if ($model->update($obj->cg_id, $data)) {
             $msg_validation['cg_id'] = $obj->cg_id;
             $msg_validation['valid'] = 'Success';
         } else {

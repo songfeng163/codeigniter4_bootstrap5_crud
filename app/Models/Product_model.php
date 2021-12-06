@@ -14,6 +14,28 @@ class Product_model extends Model {
         'prod_id', 'prod_name', 'prod_price', 'prod_pc_id', 'prod_note'
     ];
 
+	protected $validationRules= [
+		'prod_name'  =>  'required|min_length[2]|max_length[100]',
+		'prod_price' =>  'required|decimal',
+		'prod_pc_id' =>  'required|is_not_unique[tbl_product_category.pc_id]'
+	];
+
+	protected $validationMessages= [
+		'prod_name' => [
+			'required' => 'Product name is required.',
+			'min_length' => 'Minimum 2 characters.',
+			'max_length' => 'Maximum 100 characters.',
+		],
+		'prod_price' => [
+			'required' => 'Price is required.',
+			'decimal' => 'Price Must be Number.',
+		],
+		'prod_pc_id' => [
+			'required' => 'Category is required.',
+			'is_not_unique' => 'Category Must be in Product Category.',
+		],
+	];
+
 	//-------------------------------------------------
 	public function findAll(int $limit=0, int $offset=0) {
 		$builder = $this->builder();

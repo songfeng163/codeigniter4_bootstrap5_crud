@@ -40,26 +40,6 @@ class Product extends BaseController {
 		echo json_encode($model->find($obj->prod_id));
 	}
 	//--------------------------------------------------------------------------
-	public function validate_data() {
-		$validation =  \Config\Services::validation();
-
-		$rules  = [
-			'prod_name'  =>  'required|min_length[2]|max_length[100]',
-			'prod_price' =>  'required|decimal',
-			'prod_pc_id' =>  'required|is_not_unique[tbl_product_category.pc_id]'
-		];
-
-		$messages = [
-			'product_name' => [
-				'required' => 'Product name is required.',
-				'min_length' => 'Minimum 2 characters.',
-				'max_length' => 'Maximum 100 characters.',
-			],
-		];
-
-		return $validation->setRules($rules, $messages);
-	}
-	//--------------------------------------------------------------------------
 	public function save() {
 		$obj = json_decode($this->request->getPost('jsarray'));
 		$model = new Product_model();
@@ -73,15 +53,16 @@ class Product extends BaseController {
 			'prod_note'	=> $obj->prod_note,
 		);
 
-		$validation = $this->validate_data();
-
-		if ($validation->run($data)) {
-			$model->insert($data);
-			$msg_validation['prod_id'] = $new_id;
-			$msg_validation['valid'] = 'Success';
-
+		if($model->insert($data)==0) {
+			if($model->errors()) {
+				$errors = $model->errors();
+				$msg_validation['valid'] = $errors;
+			} else {
+				$msg_validation['prod_id'] = $new_id;
+				$msg_validation['valid'] = 'Success';
+			}
 		} else {
-			$errors = $validation->listErrors();
+			$errors = $model->errors();
 			$msg_validation['valid'] = $errors;
 		}
 		echo json_encode($msg_validation);
@@ -89,6 +70,7 @@ class Product extends BaseController {
 	//--------------------------------------------------------------------------
 	public function edit() {
 		$obj = json_decode($this->request->getPost('jsarray'));
+		$model = new Product_model();
 
 		$data = array(
 			'prod_id' => $obj->prod_id,
@@ -98,22 +80,16 @@ class Product extends BaseController {
 			'prod_note'	=> $obj->prod_note,
 		);
 
-		$validation = $this->validate_data();
-
-		if ($validation->run($data)) {
-			$model = new Product_model();
-			$model->update($obj->prod_id, $data);
-
+		if ($model->update($obj->prod_id, $data)) {
 			$msg_validation['prod_id'] = $obj->prod_id;
 			$msg_validation['valid'] = 'Success';
 
 		} else {
-			$errors = $validation->listErrors();
+			$errors = $model->errors();
 			$msg_validation['valid'] = $errors;
 		}
 		echo json_encode($msg_validation);
 	}
-
 	//--------------------------------------------------------------------------
 	public function delete() {
 		$obj = json_decode($this->request->getPost('jsarray'));
