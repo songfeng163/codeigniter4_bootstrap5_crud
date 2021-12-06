@@ -44,10 +44,11 @@
                             <div class="collapse" id="collapseRegistration" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="<?php echo site_url('/customer') ?>">Customer</a>
-                                    <a class="nav-link" href="<?php echo site_url('/customer_group') ?>">Customer Group</a>
-                                    <a class="nav-link" href="<?php echo site_url('/product') ?>">Product</a>
-                                    <a class="nav-link" href="<?php echo site_url('/product_cat') ?>">Product Category</a>
                                     <a class="nav-link" href="<?php echo site_url('/vendor') ?>">Vendor</a>
+                                    <a class="nav-link" href="<?php echo site_url('/product') ?>">Product</a>
+                                    <a class="nav-link" href="<?php echo site_url('/customer_group') ?>">Customer Group</a>
+                                    <a class="nav-link" href="<?php echo site_url('/product_cat') ?>">Product Category</a>
+                                    <a class="nav-link" href="<?php echo site_url('/product_unit') ?>">Product Unit</a>
                                 </nav>
                             </div>
 

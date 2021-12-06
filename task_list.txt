@@ -36,6 +36,12 @@ DB Change:
 ------------------------
 ALTER TABLE `tbl_vendor` DROP `ven_user_id`;
 
+CREATE TABLE `tbl_product_unit` (
+  `unit_id` varchar(10) NOT NULL,
+  `unit_name` varchar(100) NOT NULL,
+  `unit_note` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`unit_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 
