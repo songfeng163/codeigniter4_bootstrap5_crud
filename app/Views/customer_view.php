@@ -13,7 +13,7 @@
 		<table id="tbl_customer" class="table table-striped table-bordered">
 			<thead>
 				<tr>
-					<th>ID</th>
+					<th>ID1</th>
 					<th>Name</th>
 					<th>Address</th>
 					<th>Mobile</th>
