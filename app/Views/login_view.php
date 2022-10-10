@@ -60,5 +60,4 @@
         </div>
         <?php echo view('include_js') ?>
     </body>
-
 </html>
